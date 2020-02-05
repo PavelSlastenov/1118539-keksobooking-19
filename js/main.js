@@ -1,5 +1,6 @@
 'use strict';
 
+//  Количество объявлений
 var NUMBER_OF_ADS = 8;
 
 //  Всё содержимое объявления
@@ -25,3 +26,16 @@ var LOCATION_X_MIN = 0;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 
+//  Метка объявления
+var similarPinTemplate = document.querySelector('#pin').content;
+
+//  Обращаемся к карте и метке объявлений
+var similarPinElement = document.querySelector('.map').querySelector('.map__pins');
+
+//  Модальное окно с информацией об объявлении
+var similarCardTemplate = document.querySelector('#card').content;
+
+//  Функция выбора случайного числа
+var getRandomRange = function (minNumber, maxNumber) {
+  return Math.round(Math.random() * (maxNumber - minNumber) + minNumber);
+};
