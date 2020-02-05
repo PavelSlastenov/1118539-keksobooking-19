@@ -21,8 +21,8 @@ var GUESTS = {
   MAX: 10
 };
 var ADDRESS = {
-  MAX1: 300,
-  MAX2: 1111
+  MAX_1: 300,
+  MAX_2: 1111
 };
 var CURRENCY = '₽';
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
@@ -70,3 +70,34 @@ var fragment = document.createDocumentFragment();
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
+
+//  Функция создающая объекты в массиве
+var getOffer = function (Number) {
+  return {
+    author: {
+//  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
+      avatar: 'img/avatars/user' + '0' + getRandomNumber(1, 8) + '.png'
+    },
+    offer: {
+      title: TITLE[getRandomNumber(TITLE.length)],
+      address: getRandomNumber(0, ADRESSC.MAX_1) + ',' + getRandomNumber(0, ADRESS.MAX_2),
+      price: getRandomNumber(PRICE.MIN, PRICE.MAX),
+      type: TYPE_OF_HOUSING[getRandomNumber(TYPE_OF_HOUSING.length)],
+      rooms: getRandomNumber(ROOMS.MIN, ROOMS.MAX),
+      guests: getRandomNumber(GUESTS.MIN, GUESTS.MAX),
+      checkin: CHECKIN[getRandomNumber(CHECKIN.length)],
+      checkout: CHECKOUT[getRandomNumber(CHECKOUT.length)],
+      features: OPTIONS[getRandomNumber(OPTIONS.length)],
+      description: DESCRIPTION[getRandomNumber(DESCRIPTION.length)],
+      photos: getRandomNumber(PHOTOS),
+
+//  "x": случайное число, координата x метки на карте, ограничено размерами блока, в котором перетаскивается метка.
+//  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
+      location: {
+        x: getRandomNumber(0, MAP_WIDTH) - PIN_WIDTH / 2 + 'px',
+        y: getRandomNumber(Y.MIN, Y.MAX) - PIN_HEIGHT + 'px'
+      }
+    }
+  };
+};
+
