@@ -27,15 +27,23 @@ var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 
 //  Метка объявления
-var similarPinTemplate = document.querySelector('#pin').content;
-
-//  Обращаемся к карте и метке объявлений
-var similarPinElement = document.querySelector('.map').querySelector('.map__pins');
-
-//  Модальное окно с информацией об объявлении
-var similarCardTemplate = document.querySelector('#card').content;
+var similarMapPin = document.querySelector('#pin').content.querySelector('.map__pin');
+var pinWidth = document.querySelector('.map__pin').offsetWidth;
+var pinHeight = document.querySelector('.map__pin').offsetHeight;
 
 //  Функция выбора случайного числа
-var getRandomRange = function (minNumber, maxNumber) {
-  return Math.round(Math.random() * (maxNumber - minNumber) + minNumber);
+var getRandomNumber = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+
+//  Функция выбора элемента из массива (можно применить к любому масиву)
+var getRandomElement = function (arr) {
+  if (!arr) {
+    return null;
+  } else {
+    var random = Math.floor(Math.random() * arr.length);
+    return arr[random];
+  }
+};
+
+
