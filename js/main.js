@@ -51,11 +51,11 @@ var DESCRIPTION = [
 var MAP_WIDTH = 1200;
 
 //  Размеры метки
-var PIN_WIDTH = 100;
-var PIN_HEIGHT = 100;
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
 
 //  Координаты метки
-var Y = {
+var coordinate_Y = {
   MIN: 130,
   MAX: 630
 };
@@ -72,7 +72,7 @@ var getRandomNumber = function (min, max) {
 };
 
 //  Функция создающая объекты в массиве
-var getOffer = function (Number) {
+var getAdList = function (pinNumber) {
   return {
     author: {
 //  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
@@ -80,7 +80,7 @@ var getOffer = function (Number) {
     },
     offer: {
       title: TITLE[getRandomNumber(TITLE.length)],
-      address: getRandomNumber(0, ADRESSC.MAX_1) + ',' + getRandomNumber(0, ADRESS.MAX_2),
+      address: getRandomNumber(0, ADRESS.MAX_1) + ',' + getRandomNumber(0, ADRESS.MAX_2),
       price: getRandomNumber(PRICE.MIN, PRICE.MAX),
       type: TYPE_OF_HOUSING[getRandomNumber(TYPE_OF_HOUSING.length)],
       rooms: getRandomNumber(ROOMS.MIN, ROOMS.MAX),
@@ -89,15 +89,46 @@ var getOffer = function (Number) {
       checkout: CHECKOUT[getRandomNumber(CHECKOUT.length)],
       features: OPTIONS[getRandomNumber(OPTIONS.length)],
       description: DESCRIPTION[getRandomNumber(DESCRIPTION.length)],
-      photos: getRandomNumber(PHOTOS),
+      photos: PHOTOS[getRandomNumber(PHOTOS.length)],
 
 //  "x": случайное число, координата x метки на карте, ограничено размерами блока, в котором перетаскивается метка.
 //  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
       location: {
         x: getRandomNumber(0, MAP_WIDTH) - PIN_WIDTH / 2 + 'px',
-        y: getRandomNumber(Y.MIN, Y.MAX) - PIN_HEIGHT + 'px'
+        y: getRandomNumber(coordinate_Y.MIN, coordinate_Y.MAX) - PIN_HEIGHT + 'px'
       }
     }
   };
 };
 
+//  Функция с пустым массивом, куда будут добавляться элементы
+var getAdLists = function () {
+  var adLists = [];
+
+  for (var i = 0; i < NUMBER_OF_ADS; i++) {
+    adLists.push(getAdList(i));
+  }
+
+  return adLists;
+};
+
+var pins = getAdLists();
+
+var renderPin = function (pinData) {
+  var pinElement = PinTemplate.cloneNode(true);
+  var pinImgElement = pinElement.querySelector('img');
+
+  pinElement.style.left = pinData.offer.location.x;
+  pinElement.style.top = pinData.offer.location.y;
+  pinImgElement.src = pinData.author.avatar;
+  pinImgElement.alt = pinData.offer.title;
+
+  return pinElement;
+};
+
+for (var i = 0; i < NUMBER_OF_ADS; i++) {
+  fragment.appendChild(renderPin(pins[i]));
+}
+ListElement.appendChild(fragment);
+
+mapElement.classList.remove('map--faded');
