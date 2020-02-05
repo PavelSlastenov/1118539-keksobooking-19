@@ -1,12 +1,10 @@
 'use strict';
-
 //  Количество объявлений
 var NUMBER_OF_ADS = 8;
-
 //  Всё содержимое объявления
-var TYPE_OF_HOUSING = ['palace','flat','house','bungalo'];
-var CHECKIN = ['12:00','13:00','14:00'];
-var CHECKOUT = ['12:00','13:00','14:00'];
+var TYPE_OF_HOUSING = ['palace', 'flat', 'house', 'bungalo'];
+var CHECKIN = ['12:00', '13:00', '14:00'];
+var CHECKOUT = ['12:00', '13:00', '14:00'];
 var OPTIONS = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator'];
 var PRICE = {
   MIN: 200,
@@ -24,7 +22,6 @@ var ADDRESS = {
   MAX_1: 300,
   MAX_2: 1111
 };
-var CURRENCY = '₽';
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var TITLE = [
   'Отличное расположение!',
@@ -55,7 +52,7 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 
 //  Координаты метки
-var coordinate_Y = {
+var coordinateY = {
   MIN: 130,
   MAX: 630
 };
@@ -72,15 +69,15 @@ var getRandomNumber = function (min, max) {
 };
 
 //  Функция создающая объекты в массиве
-var getAdList = function (pinNumber) {
+var getAdList = function () {
   return {
     author: {
-//  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
+    //  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
       avatar: 'img/avatars/user' + '0' + getRandomNumber(1, 8) + '.png'
     },
     offer: {
       title: TITLE[getRandomNumber(TITLE.length)],
-      address: getRandomNumber(0, ADRESS.MAX_1) + ',' + getRandomNumber(0, ADRESS.MAX_2),
+      address: getRandomNumber(0, ADDRESS.MAX_1) + ',' + getRandomNumber(0, ADDRESS.MAX_2),
       price: getRandomNumber(PRICE.MIN, PRICE.MAX),
       type: TYPE_OF_HOUSING[getRandomNumber(TYPE_OF_HOUSING.length)],
       rooms: getRandomNumber(ROOMS.MIN, ROOMS.MAX),
@@ -91,11 +88,11 @@ var getAdList = function (pinNumber) {
       description: DESCRIPTION[getRandomNumber(DESCRIPTION.length)],
       photos: PHOTOS[getRandomNumber(PHOTOS.length)],
 
-//  "x": случайное число, координата x метки на карте, ограничено размерами блока, в котором перетаскивается метка.
-//  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
+      //  "x": случайное число, координата x метки на карте, ограничено размерами блока, в котором перетаскивается метка.
+      //  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
       location: {
         x: getRandomNumber(0, MAP_WIDTH) - PIN_WIDTH / 2 + 'px',
-        y: getRandomNumber(coordinate_Y.MIN, coordinate_Y.MAX) - PIN_HEIGHT + 'px'
+        y: getRandomNumber(coordinateY.MIN, coordinateY.MAX) - PIN_HEIGHT + 'px'
       }
     }
   };
