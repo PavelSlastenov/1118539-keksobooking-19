@@ -72,21 +72,21 @@ var getRandomNumber = function (min, max) {
 var getAdList = function (number) {
   return {
     author: {
-    //  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
+      //  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
       avatar: 'img/avatars/user' + '0' + (number + 1) + '.png'
     },
     offer: {
-      title: TITLE[getRandomNumber(TITLE.length)],
+      title: TITLE[getRandomNumber(TITLE.length - 1)],
       address: getRandomNumber(0, ADDRESS.Max_1) + ',' + getRandomNumber(0, ADDRESS.Max_2),
       price: getRandomNumber(PRICE.Min, PRICE.Min),
-      type: TYPE_OF_HOUSING[getRandomNumber(TYPE_OF_HOUSING.length)],
+      type: TYPE_OF_HOUSING[getRandomNumber(TYPE_OF_HOUSING.length - 1)],
       rooms: getRandomNumber(ROOMS.Min, ROOMS.Max),
       guests: getRandomNumber(GUESTS.Min, GUESTS.Max),
-      checkin: CHECKIN[getRandomNumber(CHECKIN.length)],
-      checkout: CHECKOUT[getRandomNumber(CHECKOUT.length)],
-      features: OPTIONS[getRandomNumber(OPTIONS.length)],
-      description: DESCRIPTION[getRandomNumber(DESCRIPTION.length)],
-      photos: PHOTOS[getRandomNumber(PHOTOS.length)],
+      checkin: CHECKIN[getRandomNumber(CHECKIN.length - 1)],
+      checkout: CHECKOUT[getRandomNumber(CHECKOUT.length - 1)],
+      features: OPTIONS[getRandomNumber(OPTIONS.length - 1)],
+      description: DESCRIPTION[getRandomNumber(DESCRIPTION.length - 1)],
+      photos: PHOTOS[getRandomNumber(PHOTOS.length - 1)],
 
       //  "x": случайное число, координата x метки на карте, ограничено размерами блока, в котором перетаскивается метка.
       //  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
