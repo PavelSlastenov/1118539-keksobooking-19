@@ -19,8 +19,8 @@ var GUESTS = {
   Max: 10
 };
 var ADDRESS = {
-  Max_1: 300,
-  Max_2: 1000
+  Max1: 300,
+  Max2: 1000
 };
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var TITLE = [
@@ -52,6 +52,11 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 
 //  Координаты метки
+var coordinateX = {
+  Min: 0,
+  Max: 1200
+};
+
 var coordinateY = {
   Min: 130,
   Max: 630
@@ -70,53 +75,48 @@ var getRandomNumber = function (min, max) {
 
 //  Функция создающая объекты в массиве
 var getAdList = function (number) {
-  return {
-    author: {
-      //  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
-      avatar: 'img/avatars/user' + '0' + (number + 1) + '.png'
-    },
-    offer: {
-      title: TITLE[getRandomNumber(TITLE.length - 1)],
-      address: getRandomNumber(0, ADDRESS.Max_1) + ',' + getRandomNumber(0, ADDRESS.Max_2),
-      price: getRandomNumber(PRICE.Min, PRICE.Min),
-      type: TYPE_OF_HOUSING[getRandomNumber(TYPE_OF_HOUSING.length - 1)],
-      rooms: getRandomNumber(ROOMS.Min, ROOMS.Max),
-      guests: getRandomNumber(GUESTS.Min, GUESTS.Max),
-      checkin: CHECKIN[getRandomNumber(CHECKIN.length - 1)],
-      checkout: CHECKOUT[getRandomNumber(CHECKOUT.length - 1)],
-      features: OPTIONS[getRandomNumber(OPTIONS.length - 1)],
-      description: DESCRIPTION[getRandomNumber(DESCRIPTION.length - 1)],
-      photos: PHOTOS[getRandomNumber(PHOTOS.length - 1)],
+  var adList = [];
+  for (var i = 0; i < number; i++) {
+    adList.push({
+      author: {
+        //  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
+        avatar: 'img/avatars/user' + '0' + (number + 1) + '.png'
+      },
+      offer: {
+        title: TITLE[getRandomNumber(TITLE.length - 1)],
+        address: getRandomNumber(0, ADDRESS.Max1) + ',' + getRandomNumber(0, ADDRESS.Max2),
+        price: getRandomNumber(PRICE.Min, PRICE.Min),
+        type: TYPE_OF_HOUSING[getRandomNumber(TYPE_OF_HOUSING.length - 1)],
+        rooms: getRandomNumber(ROOMS.Min, ROOMS.Max),
+        guests: getRandomNumber(GUESTS.Min, GUESTS.Max),
+        checkin: CHECKIN[getRandomNumber(CHECKIN.length - 1)],
+        checkout: CHECKOUT[getRandomNumber(CHECKOUT.length - 1)],
+        features: OPTIONS[getRandomNumber(OPTIONS.length - 1)],
+        description: DESCRIPTION[getRandomNumber(DESCRIPTION.length - 1)],
+        photos: PHOTOS[getRandomNumber(PHOTOS.length - 1)],
 
-      //  "x": случайное число, координата x метки на карте, ограничено размерами блока, в котором перетаскивается метка.
-      //  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
-      location: {
-        x: getRandomNumber(0, MAP_WIDTH) - PIN_WIDTH / 2 + 'px',
-        y: getRandomNumber(coordinateY.Min, coordinateY.Max) - PIN_HEIGHT + 'px'
+        //  "x": случайное число, координата x метки на карте, ограничено размерами блока, в котором перетаскивается метка.
+        //  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
+        location: {
+          x: coordinateX,
+          y: coordinateY
+        }
       }
     }
-  };
-};
+    );
 
-//  Функция с пустым массивом, куда будут добавляться элементы
-var getAdLists = function () {
-  var adLists = [];
-
-  for (var i = 0; i < NUMBER_OF_ADS; i++) {
-    adLists.push(getAdList(i));
   }
-
-  return adLists;
+  return adList;
 };
 
-var pins = getAdLists();
+var pins = getAdList();
 
 var renderPin = function (pinData) {
   var pinElement = pinTemplate.cloneNode(true);
   var pinImgElement = pinElement.querySelector('img');
 
-  pinElement.style.left = pinData.offer.location.x;
-  pinElement.style.top = pinData.offer.location.y;
+  pinElement.style.left = getRandomNumber(0, MAP_WIDTH) - PIN_WIDTH / 2 + 'px';
+  pinElement.style.top = getRandomNumber(coordinateY.Min, coordinateY.Max) - PIN_HEIGHT + 'px';
   pinImgElement.src = pinData.author.avatar;
   pinImgElement.alt = pinData.offer.title;
 
