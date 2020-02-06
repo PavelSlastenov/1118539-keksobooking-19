@@ -7,20 +7,20 @@ var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
 var OPTIONS = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator'];
 var PRICE = {
-  MIN: 200,
-  MAX: 10000
+  Min: 200,
+  Max: 10000
 };
 var ROOMS = {
-  MIN: 1,
-  MAX: 5
+  Min: 1,
+  Max: 5
 };
 var GUESTS = {
-  MIN: 1,
-  MAX: 10
+  Min: 1,
+  Max: 10
 };
 var ADDRESS = {
-  MAX_1: 300,
-  MAX_2: 1000
+  Max_1: 300,
+  Max_2: 1000
 };
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var TITLE = [
@@ -53,14 +53,14 @@ var PIN_HEIGHT = 70;
 
 //  Координаты метки
 var coordinateY = {
-  MIN: 130,
-  MAX: 630
+  Min: 130,
+  Max: 630
 };
 
 //  Метка объявления
 var mapElement = document.querySelector('.map');
-var ListElement = document.querySelector('.map__pins');
-var PinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var listElement = document.querySelector('.map__pins');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var fragment = document.createDocumentFragment();
 
 //  Функция выбора случайного числа
@@ -69,19 +69,19 @@ var getRandomNumber = function (min, max) {
 };
 
 //  Функция создающая объекты в массиве
-var getAdList = function () {
+var getAdList = function (number) {
   return {
     author: {
     //  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
-      avatar: 'img/avatars/user' + '0' + getRandomNumber(1, 8) + '.png'
+      avatar: 'img/avatars/user' + '0' + (number + 1) + '.png'
     },
     offer: {
       title: TITLE[getRandomNumber(TITLE.length)],
-      address: getRandomNumber(0, ADDRESS.MAX_1) + ',' + getRandomNumber(0, ADDRESS.MAX_2),
-      price: getRandomNumber(PRICE.MIN, PRICE.MAX),
+      address: getRandomNumber(0, ADDRESS.Max_1) + ',' + getRandomNumber(0, ADDRESS.Max_2),
+      price: getRandomNumber(PRICE.Min, PRICE.Min),
       type: TYPE_OF_HOUSING[getRandomNumber(TYPE_OF_HOUSING.length)],
-      rooms: getRandomNumber(ROOMS.MIN, ROOMS.MAX),
-      guests: getRandomNumber(GUESTS.MIN, GUESTS.MAX),
+      rooms: getRandomNumber(ROOMS.Min, ROOMS.Max),
+      guests: getRandomNumber(GUESTS.Min, GUESTS.Max),
       checkin: CHECKIN[getRandomNumber(CHECKIN.length)],
       checkout: CHECKOUT[getRandomNumber(CHECKOUT.length)],
       features: OPTIONS[getRandomNumber(OPTIONS.length)],
@@ -92,7 +92,7 @@ var getAdList = function () {
       //  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
       location: {
         x: getRandomNumber(0, MAP_WIDTH) - PIN_WIDTH / 2 + 'px',
-        y: getRandomNumber(coordinateY.MIN, coordinateY.MAX) - PIN_HEIGHT + 'px'
+        y: getRandomNumber(coordinateY.Min, coordinateY.Max) - PIN_HEIGHT + 'px'
       }
     }
   };
@@ -112,7 +112,7 @@ var getAdLists = function () {
 var pins = getAdLists();
 
 var renderPin = function (pinData) {
-  var pinElement = PinTemplate.cloneNode(true);
+  var pinElement = pinTemplate.cloneNode(true);
   var pinImgElement = pinElement.querySelector('img');
 
   pinElement.style.left = pinData.offer.location.x;
@@ -126,6 +126,6 @@ var renderPin = function (pinData) {
 for (var i = 0; i < NUMBER_OF_ADS; i++) {
   fragment.appendChild(renderPin(pins[i]));
 }
-ListElement.appendChild(fragment);
+listElement.appendChild(fragment);
 
 mapElement.classList.remove('map--faded');
