@@ -6,22 +6,22 @@ var TYPE_OF_HOUSING = ['palace', 'flat', 'house', 'bungalo'];
 var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
 var OPTIONS = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator'];
-var PRICE = {
-  Min: 200,
-  Max: 10000
+
+var Price = {
+  MIN: 200,
+  MAX: 10000
 };
-var ROOMS = {
-  Min: 1,
-  Max: 5
+
+var Rooms = {
+  MIN: 1,
+  MAX: 5
 };
-var GUESTS = {
-  Min: 1,
-  Max: 10
+
+var Guests = {
+  MIN: 1,
+  MAX: 10
 };
-var ADDRESS = {
-  Max1: 300,
-  Max2: 1000
-};
+
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var TITLE = [
   'Отличное расположение!',
@@ -33,6 +33,7 @@ var TITLE = [
   'Самая выгодная цена!',
   'Своя закрытая территория!'
 ];
+
 var DESCRIPTION = [
   'Новый ремонт, техника, тихие соседи, закрытая территория',
   'Красивый вид из окна, удобное расположение (5 минут от метро), шумные соседи',
@@ -44,22 +45,19 @@ var DESCRIPTION = [
   'Предложение для тех кто хочет сэкономить, раскладушка, обогреватель, холодная вода (горячая у соседей), холодильник за окном'
 ];
 
-//  Размер карты
-var MAP_WIDTH = 1200;
-
 //  Размеры метки
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 
 //  Координаты метки
-var coordinateX = {
-  Min: 0,
-  Max: 1200
+var CoordinateX = {
+  MIN: 0,
+  MAX: 1200
 };
 
-var coordinateY = {
-  Min: 130,
-  Max: 630
+var CoordinateY = {
+  MIN: 130,
+  MAX: 630
 };
 
 //  Метка объявления
@@ -74,21 +72,21 @@ var getRandomNumber = function (min, max) {
 };
 
 //  Функция создающая объекты в массиве
-var getAdList = function (number) {
-  var adList = [];
+var getList = function (number) {
+  var List = [];
   for (var i = 0; i < number; i++) {
-    adList.push({
+    List.push({
       author: {
         //  Случайная адресная строка для "avatar", число от 1-8 с ведущим 0 (адрес изображения не повторяетсся)
-        avatar: 'img/avatars/user' + '0' + (number + 1) + '.png'
+        avatar: 'img/avatars/user' + '0' + (i + 1) + '.png'
       },
       offer: {
         title: TITLE[getRandomNumber(TITLE.length - 1)],
-        address: getRandomNumber(0, ADDRESS.Max1) + ',' + getRandomNumber(0, ADDRESS.Max2),
-        price: getRandomNumber(PRICE.Min, PRICE.Min),
+        address: location.x + ', ' + location.y,
+        price: getRandomNumber(Price.MIN, Price.MAX),
         type: TYPE_OF_HOUSING[getRandomNumber(TYPE_OF_HOUSING.length - 1)],
-        rooms: getRandomNumber(ROOMS.Min, ROOMS.Max),
-        guests: getRandomNumber(GUESTS.Min, GUESTS.Max),
+        rooms: getRandomNumber(Rooms.MIN, Rooms.MAX),
+        guests: getRandomNumber(Guests.MIN, Guests.MAX),
         checkin: CHECKIN[getRandomNumber(CHECKIN.length - 1)],
         checkout: CHECKOUT[getRandomNumber(CHECKOUT.length - 1)],
         features: OPTIONS[getRandomNumber(OPTIONS.length - 1)],
@@ -98,27 +96,27 @@ var getAdList = function (number) {
         //  "x": случайное число, координата x метки на карте, ограничено размерами блока, в котором перетаскивается метка.
         //  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
         location: {
-          x: coordinateX,
-          y: coordinateY
+          x: getRandomNumber(CoordinateX),
+          y: getRandomNumber(CoordinateY)
         }
       }
     }
     );
 
   }
-  return adList;
+  return List;
 };
 
-var pins = getAdList();
+var pins = getList();
 
-var renderPin = function (pinData) {
+var renderPin = function () {
   var pinElement = pinTemplate.cloneNode(true);
   var pinImgElement = pinElement.querySelector('img');
 
-  pinElement.style.left = getRandomNumber(0, MAP_WIDTH) - PIN_WIDTH / 2 + 'px';
-  pinElement.style.top = getRandomNumber(coordinateY.Min, coordinateY.Max) - PIN_HEIGHT + 'px';
-  pinImgElement.src = pinData.author.avatar;
-  pinImgElement.alt = pinData.offer.title;
+  pinElement.style.left = location.x - PIN_WIDTH / 2 + 'px';
+  pinElement.style.top = location.y - PIN_HEIGHT + 'px';
+  pinImgElement.src = avatar;
+  pinImgElement.alt = title;
 
   return pinElement;
 };
