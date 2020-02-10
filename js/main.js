@@ -178,5 +178,5 @@ listElement.appendChild(fragment);
 
 mapElement.classList.remove('map--faded');
 
-  //Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
+//  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
 mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFilters);
