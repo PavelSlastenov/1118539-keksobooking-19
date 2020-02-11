@@ -68,7 +68,7 @@ var typeApartments = {
 };
 
 var Address = {
-  MAX: 100,
+  MIN: 100,
   MAX: 1000
 };
 
@@ -129,7 +129,7 @@ var getList = function (number) {
       },
       offer: {
         title: TITLE[getRandomNumber(0, TITLE.length - 1)],
-        address: getRandomNumber(0, Address.MAX) + ', ' + getRandomNumber(0, Address.MAX),
+        address: getRandomNumber(0, Address.MIN) + ', ' + getRandomNumber(0, Address.MAX),
         price: getRandomNumber(Prices.MIN, Prices.MAX),
         type: typeApartments[getRandomElement(TYPE_OF_HOUSING)],
         rooms: getRandomNumber(Rooms.MIN, Rooms.MAX),
