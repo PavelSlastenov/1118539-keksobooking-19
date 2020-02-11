@@ -80,9 +80,15 @@ var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
+//  Выбор случайного массива
 var getRandomArray = function (array) {
   var newArray = array.slice(Math.floor(Math.random() * array.length - 1));
   return newArray;
+};
+
+//  Выбор случайного элемента
+var getRandomElement = function (arrayElements) {
+  return arrayElements[Math.floor(Math.random() * arrayElements.length)];
 };
 
 var renderFeatures = function (element, item) {
@@ -120,7 +126,7 @@ var getList = function (number) {
         title: TITLE[getRandomNumber(0, TITLE.length - 1)],
         address: location.x + ', ' + location.y,
         price: getRandomNumber(Prices.MIN, Prices.MAX),
-        type: typeApartments[getRandomNumber(0, TYPE_OF_HOUSING.length - 1)],
+        type: typeApartments[getRandomElement(TYPE_OF_HOUSING)],
         rooms: getRandomNumber(Rooms.MIN, Rooms.MAX),
         guests: getRandomNumber(Guests.MIN, Guests.MAX),
         checkin: CHECKIN[getRandomNumber(0, CHECKIN.length - 1)],
