@@ -8,8 +8,8 @@ var CHECKOUT = ['12:00', '13:00', '14:00'];
 var OPTIONS = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator'];
 
 var Prices = {
-  MIN: 200,
-  MAX: 10000
+  MIN: 3000,
+  MAX: 15000
 };
 
 var Rooms = {
@@ -80,6 +80,11 @@ var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
+var getRandomArray = function (array) {
+  var newArray = array.slice(Math.floor(Math.random() * array.length - 1));
+  return newArray;
+};
+
 var renderFeatures = function (element, item) {
   element.innerHTML = '';
 
@@ -120,9 +125,9 @@ var getList = function (number) {
         guests: getRandomNumber(Guests.MIN, Guests.MAX),
         checkin: CHECKIN[getRandomNumber(0, CHECKIN.length - 1)],
         checkout: CHECKOUT[getRandomNumber(0, CHECKOUT.length - 1)],
-        features: OPTIONS[getRandomNumber(0, OPTIONS.length - 1)],
+        features: getRandomArray(OPTIONS),
         description: DESCRIPTION[getRandomNumber(0, DESCRIPTION.length - 1)],
-        photos: PHOTOS[getRandomNumber(0, PHOTOS.length - 1)],
+        photos: getRandomArray(PHOTOS),
 
         //  "x": случайное число, координата x метки на карте, ограничено размерами блока, в котором перетаскивается метка.
         //  "y": случайное число, координата y метки на карте от 130 до 630 (в переменной: Y)
