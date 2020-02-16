@@ -1,7 +1,6 @@
 'use strict';
-//  Количество объявлений
+
 var NUMBER_OF_ADS = 8;
-//  Всё содержимое объявления
 var TYPE_OF_HOUSING = ['palace', 'flat', 'house', 'bungalo'];
 var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
@@ -77,7 +76,7 @@ var mapElement = document.querySelector('.map');
 var listElement = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-var mapFilters = mapElement.querySelector('.map__filters-container');
+var mapFiltersContainer = mapElement.querySelector('.map__filters-container');
 var fragment = document.createDocumentFragment();
 
 //  Функция выбора случайного числа
@@ -194,11 +193,14 @@ listElement.appendChild(fragment);
 
 //  mapElement.classList.remove('map--faded');
 //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
-mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFilters);
+mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
 
 //  Задание 4
 var adForm = document.querySelector('.ad-form');
-var adFormInput = adForm.querySelectorAll('input', 'select'); //Добавить потом селект в название переменной
+var adFormInput = adForm.querySelectorAll('input', 'select');
+var mapPinMain = mapBlock.querySelector('.map__pin--main');
+var mapFilters = mapBlock.querySelector('.map__filters');
+var mapPinMainAdress = adForm.querySelector('input[name="address"]');
 
 //  Отключает форму
 adForm.сlassList.add('ad-form--disabled');
@@ -224,3 +226,27 @@ adFormDisabled(addFormInput);
 adForm.setAttribute('disabled', '');
 mapFilters.setAttribute('disabled', '');
 
+//  Активация пина
+var mapPinMainActive = function (evt) {
+  if (evt.which === 1) {
+    adForm.classList.remove('ad-form--disabled');
+    adForm.removeAttribute('disabled', '');
+    mapFilters.removeAttribute('disabled');
+    init();
+    adFormEnabled(adFormInput);
+    // убираем обработчик кликов с mapPinMain
+    mapPinMain.removeEventListener('mousedown', mapPinMainActive);
+    onRoomSelectChange();
+  }
+};
+
+//  Отрисовка координат пина
+var mapPinMainCoordinate = function (evt) {
+  if (evt.which === 1) {
+    var pinX = Math.floor(evt.pageX + pinWidth / 2);
+    var pinY = Math.floor(evt.pageY + pinHeight / 2);
+    mapPinMainAdress.value = pinX + ', ' + pinY;
+    mapPinMainAdress.setAttribute('disabled', '');
+    mapPinMain.removeEventListener('mousedown', mapPinMainCoordinate);
+  }
+};
