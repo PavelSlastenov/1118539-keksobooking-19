@@ -79,6 +79,30 @@ var cardTemplate = document.querySelector('#card').content.querySelector('.map__
 var mapFiltersContainer = mapElement.querySelector('.map__filters-container');
 var fragment = document.createDocumentFragment();
 
+//  Переменные к заданию 4 (часть 1)
+var adForm = document.querySelector('.ad-form');
+var adFormInput = adForm.querySelectorAll('input', 'select');
+var mapPinMain = mapElement.querySelector('.map__pin--main');
+var mapFilters = mapElement.querySelector('.map__filters');
+var mapPinMainAdress = adForm.querySelector('input[name="address"]');
+var selectType = adForm.querySelector('#type');
+var selecTypePrice = adForm.querySelector('input[name="price"]');
+var selectRoom = adForm.querySelector('#room_number');
+var selectCapacity = adForm.querySelector('#capacity');
+var adFormSubmit = adForm.querySelector('.ad-form__submit');
+
+var elementTIme = adForm.querySelector('.ad-form__element--time');
+var selectCheckIn = elementTIme.querySelector('#timein');
+var selectCheckOut = elementTIme.querySelector('#timeout');
+
+//  Массив для подстановки данных
+var typeOfHousingPrice = {
+  palace: '10000',
+  flat: '1000',
+  house: '5000',
+  bungalo: '0'
+};
+
 //  Функция выбора случайного числа
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -165,7 +189,7 @@ var renderPin = function (pinData) {
 
   return pinElement;
 };
-/*
+
 var renderCard = function (pinData) {
   var cardElement = cardTemplate.cloneNode(true);
   var cardFeatures = cardElement.querySelector('.popup__features');
@@ -184,7 +208,7 @@ var renderCard = function (pinData) {
 
   return cardElement;
 };
-*/
+
 for (var i = 0; i < NUMBER_OF_ADS; i++) {
   fragment.appendChild(renderPin(pins[i]));
 }
@@ -196,12 +220,6 @@ listElement.appendChild(fragment);
 mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
 
 //  Задание 4
-var adForm = document.querySelector('.ad-form');
-var adFormInput = adForm.querySelectorAll('input', 'select');
-var mapPinMain = mapBlock.querySelector('.map__pin--main');
-var mapFilters = mapBlock.querySelector('.map__filters');
-var mapPinMainAdress = adForm.querySelector('input[name="address"]');
-
 //  Отключает форму
 adForm.сlassList.add('ad-form--disabled');
 
@@ -217,14 +235,43 @@ var adFormEnabled = function (array) {
   for (var i = 0; i < array.length; i++) {
     array[i].disabled = false;
   }
-}
+};
 
 //  Блокирует все <input> и <select> формы .ad-form с помощью атрибута disabled
-adFormDisabled(addFormInput);
+adFormDisabled(adFormInput);
 
 //  Блокирует форму и форму с фильтрами
 adForm.setAttribute('disabled', '');
 mapFilters.setAttribute('disabled', '');
+
+//  В зависимости от количества комнат, блокирует количество гостей
+var onRoomSelectChange = function () {
+  if (selectRoom.value === '1') {
+    selectCapacity.options[0].setAttribute('disabled', '');
+    selectCapacity.options[1].removeAttribute('disabled', '');
+    selectCapacity.options[2].removeAttribute('disabled', '');
+    selectCapacity.options[3].setAttribute('disabled', '');
+
+  }
+  if (selectRoom.value === '2') {
+    selectCapacity.options[0].setAttribute('disabled', '');
+    selectCapacity.options[1].removeAttribute('disabled', '');
+    selectCapacity.options[2].removeAttribute('disabled', '');
+    selectCapacity.options[3].setAttribute('disabled', '');
+  }
+  if (selectRoom.value === '3') {
+    selectCapacity.options[0].removeAttribute('disabled', '');
+    selectCapacity.options[1].removeAttribute('disabled', '');
+    selectCapacity.options[2].removeAttribute('disabled', '');
+    selectCapacity.options[3].setAttribute('disabled', '');
+  }
+  if (selectRoom.value === '100') {
+    selectCapacity.options[0].setAttribute('disabled', '');
+    selectCapacity.options[1].setAttribute('disabled', '');
+    selectCapacity.options[2].setAttribute('disabled', '');
+    selectCapacity.options[3].removeAttribute('disabled', '');
+  }
+};
 
 //  Активация пина
 var mapPinMainActive = function (evt) {
@@ -232,7 +279,7 @@ var mapPinMainActive = function (evt) {
     adForm.classList.remove('ad-form--disabled');
     adForm.removeAttribute('disabled', '');
     mapFilters.removeAttribute('disabled');
-    init();
+    // Возможно добавить отрисовку пина или как-то сделать единую функцию на открытие карты и отрисовку пина?
     adFormEnabled(adFormInput);
     // убираем обработчик кликов с mapPinMain
     mapPinMain.removeEventListener('mousedown', mapPinMainActive);
@@ -243,10 +290,50 @@ var mapPinMainActive = function (evt) {
 //  Отрисовка координат пина
 var mapPinMainCoordinate = function (evt) {
   if (evt.which === 1) {
-    var pinX = Math.floor(evt.pageX + pinWidth / 2);
-    var pinY = Math.floor(evt.pageY + pinHeight / 2);
+    var pinX = Math.floor(evt.pageX + PIN_WIDTH / 2);
+    var pinY = Math.floor(evt.pageY + PIN_HEIGHT / 2);
     mapPinMainAdress.value = pinX + ', ' + pinY;
     mapPinMainAdress.setAttribute('disabled', '');
     mapPinMain.removeEventListener('mousedown', mapPinMainCoordinate);
   }
 };
+
+var onTypeSelectChange = function () {
+  var selectTypeValue = selectType.value;
+  selecTypePrice.setAttribute('min', typeOfHousingPrice[selectTypeValue]);
+  selecTypePrice.setAttribute('placeholder', typeOfHousingPrice[selectTypeValue]);
+};
+
+selecTypePrice.addEventListener('invalid', function () {
+  if (selecTypePrice.validity.rangeOverflow) {
+    selecTypePrice.setCustomValidity('Столько стоить не может');
+  } else {
+    selecTypePrice.setCustomValidity('');
+  }
+});
+
+selectRoom.addEventListener('invalid', function () {
+  // console.log('ошибка');
+  if (selecTypePrice.validity.patternMismatch) {
+    selecTypePrice.setCustomValidity('Выберите меньше гостей');
+  } else {
+    selecTypePrice.setCustomValidity('');
+  }
+});
+
+var onCheckinSelectChange = function () {
+  selectCheckOut.value = selectCheckIn.value;
+};
+
+var onCheckoutSelectChange = function () {
+  selectCheckIn.value = selectCheckOut.value;
+};
+
+// Обработчики событий
+mapPinMain.addEventListener('mousedown', mapPinMainActive);
+mapPinMain.addEventListener('mousedown', mapPinMainCoordinate);
+selectCheckIn.addEventListener('change', onCheckinSelectChange);
+selectCheckOut.addEventListener('change', onCheckoutSelectChange);
+selectRoom.addEventListener('change', onRoomSelectChange);
+selectType.addEventListener('change', onTypeSelectChange);
+adFormSubmit.addEventListener('click', onRoomSelectChange);
