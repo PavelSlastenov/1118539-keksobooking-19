@@ -75,8 +75,8 @@ var Address = {
 var mapElement = document.querySelector('.map');
 var listElement = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-var mapFiltersContainer = mapElement.querySelector('.map__filters-container');
+//  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+//  var mapFiltersContainer = mapElement.querySelector('.map__filters-container');
 var fragment = document.createDocumentFragment();
 
 //  Переменные к заданию 4 (часть 1)
@@ -118,7 +118,7 @@ var getRandomArray = function (array) {
 var getRandomElement = function (arrayElements) {
   return arrayElements[Math.floor(Math.random() * arrayElements.length)];
 };
-
+/*
 var renderFeatures = function (element, item) {
   element.innerHTML = '';
 
@@ -129,7 +129,8 @@ var renderFeatures = function (element, item) {
     element.appendChild(featureItem);
   });
 };
-
+*/
+/*
 var renderPhotos = function (element, item) {
   var photoItemTemplate = element.querySelector('img');
   element.innerHTML = '';
@@ -140,7 +141,7 @@ var renderPhotos = function (element, item) {
     element.appendChild(photoItem);
   });
 };
-
+*/
 //  Функция создающая объекты в массиве
 var getList = function (number) {
   var appartments = [];
@@ -189,7 +190,7 @@ var renderPin = function (pinData) {
 
   return pinElement;
 };
-
+/*
 var renderCard = function (pinData) {
   var cardElement = cardTemplate.cloneNode(true);
   var cardFeatures = cardElement.querySelector('.popup__features');
@@ -208,16 +209,18 @@ var renderCard = function (pinData) {
 
   return cardElement;
 };
-
+*/
 for (var i = 0; i < NUMBER_OF_ADS; i++) {
   fragment.appendChild(renderPin(pins[i]));
 }
 
 listElement.appendChild(fragment);
 
-//  mapElement.classList.remove('map--faded');
+/*
+mapElement.classList.remove('map--faded');
 //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
 mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
+*/
 
 //  Задание 4
 //  Отключает форму
