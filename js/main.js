@@ -166,7 +166,7 @@ var renderPin = function (pinData) {
 
   return pinElement;
 };
-
+/*
 var renderCard = function (pinData) {
   var cardElement = cardTemplate.cloneNode(true);
   var cardFeatures = cardElement.querySelector('.popup__features');
@@ -185,14 +185,42 @@ var renderCard = function (pinData) {
 
   return cardElement;
 };
-
+*/
 for (var i = 0; i < NUMBER_OF_ADS; i++) {
   fragment.appendChild(renderPin(pins[i]));
 }
 
 listElement.appendChild(fragment);
 
-mapElement.classList.remove('map--faded');
-
+//  mapElement.classList.remove('map--faded');
 //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
 mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFilters);
+
+//  Задание 4
+var adForm = document.querySelector('.ad-form');
+var adFormInput = adForm.querySelectorAll('input', 'select'); //Добавить потом селект в название переменной
+
+//  Отключает форму
+adForm.сlassList.add('ad-form--disabled');
+
+//  Функция принимает массив и добавляет атрибут disabled
+var adFormDisabled = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    array[i].disabled = true;
+  }
+};
+
+//  Функция принимает массив и убирает атрибут disabled
+var adFormEnabled = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    array[i].disabled = false;
+  }
+}
+
+//  Блокирует все <input> и <select> формы .ad-form с помощью атрибута disabled
+adFormDisabled(addFormInput);
+
+//  Блокирует форму и форму с фильтрами
+adForm.setAttribute('disabled', '');
+mapFilters.setAttribute('disabled', '');
+
