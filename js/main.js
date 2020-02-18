@@ -81,27 +81,10 @@ var fragment = document.createDocumentFragment();
 
 //  Переменные к заданию 4 (часть 1)
 var adForm = document.querySelector('.ad-form');
-var adFormInput = adForm.querySelectorAll('input', 'select');
 var mapPinMain = mapElement.querySelector('.map__pin--main');
 var mapFilters = mapElement.querySelector('.map__filters');
-var mapPinMainAdress = adForm.querySelector('input[name="address"]');
-var selectType = adForm.querySelector('#type');
-var selecTypePrice = adForm.querySelector('input[name="price"]');
-var selectRoom = adForm.querySelector('#room_number');
-var selectCapacity = adForm.querySelector('#capacity');
-var adFormSubmit = adForm.querySelector('.ad-form__submit');
-
-var elementTIme = adForm.querySelector('.ad-form__element--time');
-var selectCheckIn = elementTIme.querySelector('#timein');
-var selectCheckOut = elementTIme.querySelector('#timeout');
-
-//  Массив для подстановки данных
-var typeOfHousingPrice = {
-  palace: '10000',
-  flat: '1000',
-  house: '5000',
-  bungalo: '0'
-};
+var X_OFFSET = 33;
+var Y_OFFSET = 65;
 
 //  Функция выбора случайного числа
 var getRandomNumber = function (min, max) {
@@ -223,30 +206,75 @@ mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersCon
 */
 
 //  Задание 4
-//  Отключает форму
-adForm.сlassList.add('ad-form--disabled');
-
-//  Функция принимает массив и добавляет атрибут disabled
-var adFormDisabled = function (array) {
-  for (var i = 0; i < array.length; i++) {
-    array[i].disabled = true;
+//  Функция отключющая форму
+var enableForm = function (enable) {
+  if (enable === false) {
+    adForm.classList.add('ad-form--disabled');
+    document.querySelectorAll('.ad-form__element').forEach(function (item) {
+      item.setAttribute('disabled', 'disabled');
+    });
+  } else {
+    document.querySelectorAll('.ad-form__element').forEach(function (item) {
+      item.removeAttribute('disabled');
+      adForm.classList.remove('ad-form--disabled');
+    });
   }
 };
 
-//  Функция принимает массив и убирает атрибут disabled
-var adFormEnabled = function (array) {
-  for (var i = 0; i < array.length; i++) {
-    array[i].disabled = false;
+//  Функция автивирует или деактивирует страницу (enable - если true страница активируется, false - деактивируется)
+var enableOrDisablePage = function (enable) {
+  if (enable === false) {
+    enableForm(false);
+    mapFilters.classList.add('map__filters--disabled');
+    adForm.querySelector('#address').setAttribute('value', 0 + ',' + 0);
+  } else {
+    mapFilters.classList.remove('map__filters--disabled');
+    enableForm();
+    adForm.querySelector('#address').setAttribute('value', Math.floor(PIN_WIDTH + X_OFFSET) + ',' +
+      Math.floor(PIN_HEIGHT + Y_OFFSET));
+    mapElement.classList.remove('map--faded');
+    renderPin(getList(NUMBER_OF_ADS));
+  }
+
+  mapPinMain.addEventListener('mousedown', mapPinMainActive);
+  mapPinMain.addEventListener('keydown', mapPinMainCoordinate);
+
+};
+enableOrDisablePage(false);
+
+//  Функция которая активирует страницу при нажатии на основную кнопку мыши (обычно левая, указывается как "0")
+var mapPinMainActive = function (evt) {
+  if (evt.button === 0) {
+    enableOrDisablePage(true);
   }
 };
 
-//  Блокирует все <input> и <select> формы .ad-form с помощью атрибута disabled
-adFormDisabled(adFormInput);
+//  Функция которая активирует страницу при нажатии на клавишу "Enter"
+var mapPinMainCoordinate = function (evt) {
+  if (evt.key === 'Enter') {
+    enableOrDisablePage(true);
+  }
+};
 
-//  Блокирует форму и форму с фильтрами
-adForm.setAttribute('disabled', '');
-mapFilters.setAttribute('disabled', '');
-
+/*
+//  var selectType = adForm.querySelector('#type');
+//  var selecTypePrice = adForm.querySelector('input[name="price"]');
+//  var selectRoom = adForm.querySelector('#room_number');
+//  var selectCapacity = adForm.querySelector('#capacity');
+//  var selectCheckIn = elementTIme.querySelector('#timein');
+//  var selectCheckOut = elementTIme.querySelector('#timeout');
+//  var elementTIme = adForm.querySelector('.ad-form__element--time');
+ */
+/*
+//  Массив для подстановки данных
+var typeOfHousingPrices = {
+  palace: '10000',
+  flat: '1000',
+  house: '5000',
+  bungalo: '0'
+};
+*/
+/*
 //  В зависимости от количества комнат, блокирует количество гостей
 var onRoomSelectChange = function () {
   if (selectRoom.value === '1') {
@@ -254,7 +282,6 @@ var onRoomSelectChange = function () {
     selectCapacity.options[1].removeAttribute('disabled', '');
     selectCapacity.options[2].removeAttribute('disabled', '');
     selectCapacity.options[3].setAttribute('disabled', '');
-
   }
   if (selectRoom.value === '2') {
     selectCapacity.options[0].setAttribute('disabled', '');
@@ -276,35 +303,11 @@ var onRoomSelectChange = function () {
   }
 };
 
-//  Активация пина
-var mapPinMainActive = function (evt) {
-  if (evt.which === 1) {
-    adForm.classList.remove('ad-form--disabled');
-    adForm.removeAttribute('disabled', '');
-    mapFilters.removeAttribute('disabled');
-    // Возможно добавить отрисовку пина или как-то сделать единую функцию на открытие карты и отрисовку пина?
-    adFormEnabled(adFormInput);
-    // убираем обработчик кликов с mapPinMain
-    mapPinMain.removeEventListener('mousedown', mapPinMainActive);
-    onRoomSelectChange();
-  }
-};
-
-//  Отрисовка координат пина
-var mapPinMainCoordinate = function (evt) {
-  if (evt.which === 1) {
-    var pinX = Math.floor(evt.pageX + PIN_WIDTH / 2);
-    var pinY = Math.floor(evt.pageY + PIN_HEIGHT / 2);
-    mapPinMainAdress.value = pinX + ', ' + pinY;
-    mapPinMainAdress.setAttribute('disabled', '');
-    mapPinMain.removeEventListener('mousedown', mapPinMainCoordinate);
-  }
-};
 
 var onTypeSelectChange = function () {
   var selectTypeValue = selectType.value;
-  selecTypePrice.setAttribute('min', typeOfHousingPrice[selectTypeValue]);
-  selecTypePrice.setAttribute('placeholder', typeOfHousingPrice[selectTypeValue]);
+  selecTypePrice.setAttribute('min', typeOfHousingPrices[selectTypeValue]);
+  selecTypePrice.setAttribute('placeholder', typeOfHousingPrices[selectTypeValue]);
 };
 
 selecTypePrice.addEventListener('invalid', function () {
@@ -331,12 +334,4 @@ var onCheckinSelectChange = function () {
 var onCheckoutSelectChange = function () {
   selectCheckIn.value = selectCheckOut.value;
 };
-
-// Обработчики событий
-mapPinMain.addEventListener('mousedown', mapPinMainActive);
-mapPinMain.addEventListener('mousedown', mapPinMainCoordinate);
-selectCheckIn.addEventListener('change', onCheckinSelectChange);
-selectCheckOut.addEventListener('change', onCheckoutSelectChange);
-selectRoom.addEventListener('change', onRoomSelectChange);
-selectType.addEventListener('change', onTypeSelectChange);
-adFormSubmit.addEventListener('click', onRoomSelectChange);
+*/
