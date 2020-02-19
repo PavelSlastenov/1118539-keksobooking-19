@@ -197,8 +197,6 @@ for (var i = 0; i < NUMBER_OF_ADS; i++) {
   fragment.appendChild(renderPin(pins[i]));
 }
 
-listElement.appendChild(fragment);
-
 /*
 mapElement.classList.remove('map--faded');
 //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
@@ -206,13 +204,13 @@ mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersCon
 */
 
 //  Задание 4
-//  Функция отключющая форму
+//  Функция включающая и отключющая форму
 var enableForm = function (enable) {
+  document.querySelectorAll('.ad-form__element').forEach(function (item) {
+    item.setAttribute('disabled', 'disabled');
+  });
   if (enable === false) {
     adForm.classList.add('ad-form--disabled');
-    document.querySelectorAll('.ad-form__element').forEach(function (item) {
-      item.setAttribute('disabled', 'disabled');
-    });
   } else {
     document.querySelectorAll('.ad-form__element').forEach(function (item) {
       item.removeAttribute('disabled');
@@ -223,22 +221,21 @@ var enableForm = function (enable) {
 
 //  Функция автивирует или деактивирует страницу (enable - если true страница активируется, false - деактивируется)
 var enableOrDisablePage = function (enable) {
-  if (enable === false) {
+  if (!enable) {
     enableForm(false);
     mapFilters.classList.add('map__filters--disabled');
-    adForm.querySelector('#address').setAttribute('value', 0 + ',' + 0);
+    adForm.querySelector('#address').setAttribute('value', 5 + ',' + 5);
   } else {
     mapFilters.classList.remove('map__filters--disabled');
     enableForm();
+    listElement.appendChild(fragment);
     adForm.querySelector('#address').setAttribute('value', Math.floor(PIN_WIDTH + X_OFFSET) + ',' +
       Math.floor(PIN_HEIGHT + Y_OFFSET));
     mapElement.classList.remove('map--faded');
     renderPin(getList(NUMBER_OF_ADS));
   }
-
-  mapPinMain.addEventListener('mousedown', mapPinMainActive);
-  mapPinMain.addEventListener('keydown', mapPinMainCoordinate);
-
+  mapPinMain.removeEventListener('mousedown', mapPinMainActive);
+  mapPinMain.removeEventListener('keydown', mapPinMainCoordinate);
 };
 enableOrDisablePage(false);
 
@@ -255,6 +252,9 @@ var mapPinMainCoordinate = function (evt) {
     enableOrDisablePage(true);
   }
 };
+
+mapPinMain.addEventListener('mousedown', mapPinMainActive);
+mapPinMain.addEventListener('keydown', mapPinMainCoordinate);
 
 /*
 //  var selectType = adForm.querySelector('#type');
