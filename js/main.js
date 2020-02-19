@@ -85,6 +85,8 @@ var mapPinMain = mapElement.querySelector('.map__pin--main');
 var mapFilters = mapElement.querySelector('.map__filters');
 var X_OFFSET = 33;
 var Y_OFFSET = 65;
+var checkoutTime = document.querySelector('#timeout');
+var checkinTime = document.querySelector('#timein');
 
 //  Функция выбора случайного числа
 var getRandomNumber = function (min, max) {
@@ -256,82 +258,65 @@ var mapPinMainCoordinate = function (evt) {
 mapPinMain.addEventListener('mousedown', mapPinMainActive);
 mapPinMain.addEventListener('keydown', mapPinMainCoordinate);
 
-/*
-//  var selectType = adForm.querySelector('#type');
-//  var selecTypePrice = adForm.querySelector('input[name="price"]');
-//  var selectRoom = adForm.querySelector('#room_number');
-//  var selectCapacity = adForm.querySelector('#capacity');
-//  var selectCheckIn = elementTIme.querySelector('#timein');
-//  var selectCheckOut = elementTIme.querySelector('#timeout');
-//  var elementTIme = adForm.querySelector('.ad-form__element--time');
- */
-/*
-//  Массив для подстановки данных
-var typeOfHousingPrices = {
-  palace: '10000',
-  flat: '1000',
-  house: '5000',
-  bungalo: '0'
-};
-*/
-/*
-//  В зависимости от количества комнат, блокирует количество гостей
-var onRoomSelectChange = function () {
-  if (selectRoom.value === '1') {
-    selectCapacity.options[0].setAttribute('disabled', '');
-    selectCapacity.options[1].removeAttribute('disabled', '');
-    selectCapacity.options[2].removeAttribute('disabled', '');
-    selectCapacity.options[3].setAttribute('disabled', '');
-  }
-  if (selectRoom.value === '2') {
-    selectCapacity.options[0].setAttribute('disabled', '');
-    selectCapacity.options[1].removeAttribute('disabled', '');
-    selectCapacity.options[2].removeAttribute('disabled', '');
-    selectCapacity.options[3].setAttribute('disabled', '');
-  }
-  if (selectRoom.value === '3') {
-    selectCapacity.options[0].removeAttribute('disabled', '');
-    selectCapacity.options[1].removeAttribute('disabled', '');
-    selectCapacity.options[2].removeAttribute('disabled', '');
-    selectCapacity.options[3].setAttribute('disabled', '');
-  }
-  if (selectRoom.value === '100') {
-    selectCapacity.options[0].setAttribute('disabled', '');
-    selectCapacity.options[1].setAttribute('disabled', '');
-    selectCapacity.options[2].setAttribute('disabled', '');
-    selectCapacity.options[3].removeAttribute('disabled', '');
-  }
-};
-
-
-var onTypeSelectChange = function () {
-  var selectTypeValue = selectType.value;
-  selecTypePrice.setAttribute('min', typeOfHousingPrices[selectTypeValue]);
-  selecTypePrice.setAttribute('placeholder', typeOfHousingPrices[selectTypeValue]);
-};
-
-selecTypePrice.addEventListener('invalid', function () {
-  if (selecTypePrice.validity.rangeOverflow) {
-    selecTypePrice.setCustomValidity('Столько стоить не может');
+//  Валидация количества комнат и гостей
+var roomGuestChangeHandler = function () {
+  var RoomsForm = {
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0]
+  };
+  var rooms = parseInt(document.querySelector('#room_number').value, 10);
+  var guests = parseInt(document.querySelector('#capacity').value, 10);
+  if ((RoomsForm[rooms].indexOf(guests)) === -1) {
+    if (rooms < guests) {
+      document.querySelector('#capacity').setCustomValidity('Увеличьте количество комнат для такого количества гостей');
+    } else {
+      document.querySelector('#capacity').setCustomValidity('Для такого количества комнат доступно только значение "не для гостей"');
+    }
   } else {
-    selecTypePrice.setCustomValidity('');
+    document.querySelector('#capacity').setCustomValidity('');
   }
-});
+};
 
-selectRoom.addEventListener('invalid', function () {
-  // console.log('ошибка');
-  if (selecTypePrice.validity.patternMismatch) {
-    selecTypePrice.setCustomValidity('Выберите меньше гостей');
+document.querySelector('#room_number').addEventListener('change', roomGuestChangeHandler);
+document.querySelector('#capacity').addEventListener('change', roomGuestChangeHandler);
+
+//  Функция устанавливает зависимость между полями формы (время заезда и выезда)
+var timesChangeHandler = function (evt) {
+  var checkinIndexTime = checkinTime.selectedIndex;
+  var checkoutIndexTime = checkoutTime.selectedIndex;
+  if (evt.target.matches('#timein')) {
+    checkoutTime.selectedIndex = checkinIndexTime;
   } else {
-    selecTypePrice.setCustomValidity('');
+    checkinTime.selectedIndex = checkoutIndexTime;
   }
-});
-
-var onCheckinSelectChange = function () {
-  selectCheckOut.value = selectCheckIn.value;
 };
 
-var onCheckoutSelectChange = function () {
-  selectCheckIn.value = selectCheckOut.value;
+document.querySelector('#timein').addEventListener('change', timesChangeHandler);
+document.querySelector('#timeout').addEventListener('change', timesChangeHandler);
+
+//  Функция добавляет значение в атрибут 'min' в поле 'цена'
+var setPrice = function (price) {
+  var apartmenttPrice = document.querySelector('#price');
+  apartmenttPrice.setAttribute('min', price);
+  apartmenttPrice.setAttribute('placeholder', price);
 };
-*/
+
+//  Функция устанавливает зависимость поля  'цена' от  поля 'тип жилья'.
+var apartmentPriceChangeHandler = function (evt) {
+  var typeIndex = evt.target.selectedIndex;
+  var PricesForm = {
+    0: 0,
+    1: 1000,
+    2: 5000,
+    3: 10000,
+  };
+  for (var j = 0; i < 4; i++) {
+    if (typeIndex === j) {
+      setPrice(PricesForm[j]);
+    }
+  }
+};
+
+document.querySelector('#type').addEventListener('change', apartmentPriceChangeHandler);
