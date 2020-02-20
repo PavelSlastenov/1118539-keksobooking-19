@@ -88,6 +88,10 @@ var X_OFFSET = 33;
 var Y_OFFSET = 65;
 var checkoutTime = document.querySelector('#timeout');
 var checkinTime = document.querySelector('#timein');
+var capacity = document.querySelector('#capacity');
+var roomNumber = document.querySelector('#room_number');
+var type = document.querySelector('#type');
+var apartmenttPrice = document.querySelector('#price');
 
 //  Функция выбора случайного числа
 var getRandomNumber = function (min, max) {
@@ -223,12 +227,13 @@ var enableOrDisablePage = function (enable) {
   if (!enable) {
     enableForm(false);
     mapFilters.classList.add('map__filters--disabled');
-    adForm.querySelector('#address').setAttribute('value', 5 + ',' + 5);   /////////////////////
+    adForm.querySelector('#address').setAttribute('value', Math.floor((PIN_WIDTH + X_OFFSET) + (PIN_WIDTH / 2)) + ',' +
+      Math.floor((PIN_HEIGHT + Y_OFFSET) + (PIN_HEIGHT / 2)));
   } else {
     mapFilters.classList.remove('map__filters--disabled');
     enableForm(true);
     listElement.appendChild(fragment);
-    adForm.querySelector('#address').setAttribute('value', Math.floor(PIN_WIDTH + X_OFFSET) + ',' +   /////////////////////
+    adForm.querySelector('#address').setAttribute('value', Math.floor(PIN_WIDTH + X_OFFSET) + ',' +
       Math.floor(PIN_HEIGHT + Y_OFFSET));
     mapElement.classList.remove('map--faded');
   }
@@ -262,21 +267,21 @@ var roomGuestChangeHandler = function () {
     3: [1, 2, 3],
     100: [0]
   };
-  var rooms = parseInt(document.querySelector('#room_number').value, 10);
-  var guests = parseInt(document.querySelector('#capacity').value, 10);
+  var rooms = parseInt(roomNumber.value, 10);
+  var guests = parseInt(capacity.value, 10);
   if ((RoomsForm[rooms].indexOf(guests)) === -1) {
     if (rooms < guests) {
-      document.querySelector('#capacity').setCustomValidity('Увеличьте количество комнат для такого количества гостей');   //////////////
+      capacity.setCustomValidity('Увеличьте количество комнат для такого количества гостей');
     } else {
-      document.querySelector('#capacity').setCustomValidity('Для такого количества комнат доступно только значение "не для гостей"');   ////////////////
+      capacity.setCustomValidity('Для такого количества комнат доступно только значение "не для гостей"');
     }
   } else {
-    document.querySelector('#capacity').setCustomValidity('');   /////////////////
+    capacity.setCustomValidity('');
   }
 };
 
-document.querySelector('#room_number').addEventListener('change', roomGuestChangeHandler);  /////////////
-document.querySelector('#capacity').addEventListener('change', roomGuestChangeHandler);    ////////////////
+roomNumber.addEventListener('change', roomGuestChangeHandler);
+capacity.addEventListener('change', roomGuestChangeHandler);
 
 //  Функция устанавливает зависимость между полями формы (время заезда и выезда)
 var timesChangeHandler = function (evt) {
@@ -294,7 +299,6 @@ checkoutTime.addEventListener('change', timesChangeHandler);
 
 //  Функция добавляет значение в атрибут 'min' в поле 'цена'
 var setPrice = function (price) {
-  var apartmenttPrice = document.querySelector('#price');
   apartmenttPrice.setAttribute('min', price);
   apartmenttPrice.setAttribute('placeholder', price);
 };
@@ -315,4 +319,4 @@ var apartmentPriceChangeHandler = function (evt) {
   }
 };
 
-document.querySelector('#type').addEventListener('change', apartmentPriceChangeHandler);    ///////////////
+type.addEventListener('change', apartmentPriceChangeHandler);
