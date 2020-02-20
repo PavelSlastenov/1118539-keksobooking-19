@@ -75,12 +75,13 @@ var Address = {
 var mapElement = document.querySelector('.map');
 var listElement = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-//  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-//  var mapFiltersContainer = mapElement.querySelector('.map__filters-container');
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var mapFiltersContainer = mapElement.querySelector('.map__filters-container');
 var fragment = document.createDocumentFragment();
 
 //  Переменные к заданию 4 (часть 1)
 var adForm = document.querySelector('.ad-form');
+var elementForm = document.querySelectorAll('.ad-form__element');
 var mapPinMain = mapElement.querySelector('.map__pin--main');
 var mapFilters = mapElement.querySelector('.map__filters');
 var X_OFFSET = 33;
@@ -103,7 +104,7 @@ var getRandomArray = function (array) {
 var getRandomElement = function (arrayElements) {
   return arrayElements[Math.floor(Math.random() * arrayElements.length)];
 };
-/*
+
 var renderFeatures = function (element, item) {
   element.innerHTML = '';
 
@@ -114,8 +115,7 @@ var renderFeatures = function (element, item) {
     element.appendChild(featureItem);
   });
 };
-*/
-/*
+
 var renderPhotos = function (element, item) {
   var photoItemTemplate = element.querySelector('img');
   element.innerHTML = '';
@@ -126,7 +126,7 @@ var renderPhotos = function (element, item) {
     element.appendChild(photoItem);
   });
 };
-*/
+
 //  Функция создающая объекты в массиве
 var getList = function (number) {
   var appartments = [];
@@ -175,7 +175,7 @@ var renderPin = function (pinData) {
 
   return pinElement;
 };
-/*
+
 var renderCard = function (pinData) {
   var cardElement = cardTemplate.cloneNode(true);
   var cardFeatures = cardElement.querySelector('.popup__features');
@@ -194,27 +194,24 @@ var renderCard = function (pinData) {
 
   return cardElement;
 };
-*/
+
 for (var i = 0; i < NUMBER_OF_ADS; i++) {
   fragment.appendChild(renderPin(pins[i]));
 }
 
-/*
-mapElement.classList.remove('map--faded');
 //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
 mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
-*/
 
 //  Задание 4
 //  Функция включающая и отключющая форму
 var enableForm = function (enable) {
-  document.querySelectorAll('.ad-form__element').forEach(function (item) {
-    item.setAttribute('disabled', 'disabled');
-  });
-  if (enable === false) {
+  if (!enable) {
+    elementForm.forEach(function (item) {
+      item.setAttribute('disabled', 'disabled');
+    });
     adForm.classList.add('ad-form--disabled');
   } else {
-    document.querySelectorAll('.ad-form__element').forEach(function (item) {
+    elementForm.forEach(function (item) {
       item.removeAttribute('disabled');
       adForm.classList.remove('ad-form--disabled');
     });
@@ -226,15 +223,14 @@ var enableOrDisablePage = function (enable) {
   if (!enable) {
     enableForm(false);
     mapFilters.classList.add('map__filters--disabled');
-    adForm.querySelector('#address').setAttribute('value', 5 + ',' + 5);
+    adForm.querySelector('#address').setAttribute('value', 5 + ',' + 5);   /////////////////////
   } else {
     mapFilters.classList.remove('map__filters--disabled');
-    enableForm();
+    enableForm(true);
     listElement.appendChild(fragment);
-    adForm.querySelector('#address').setAttribute('value', Math.floor(PIN_WIDTH + X_OFFSET) + ',' +
+    adForm.querySelector('#address').setAttribute('value', Math.floor(PIN_WIDTH + X_OFFSET) + ',' +   /////////////////////
       Math.floor(PIN_HEIGHT + Y_OFFSET));
     mapElement.classList.remove('map--faded');
-    renderPin(getList(NUMBER_OF_ADS));
   }
   mapPinMain.removeEventListener('mousedown', mapPinMainActive);
   mapPinMain.removeEventListener('keydown', mapPinMainCoordinate);
@@ -270,17 +266,17 @@ var roomGuestChangeHandler = function () {
   var guests = parseInt(document.querySelector('#capacity').value, 10);
   if ((RoomsForm[rooms].indexOf(guests)) === -1) {
     if (rooms < guests) {
-      document.querySelector('#capacity').setCustomValidity('Увеличьте количество комнат для такого количества гостей');
+      document.querySelector('#capacity').setCustomValidity('Увеличьте количество комнат для такого количества гостей');   //////////////
     } else {
-      document.querySelector('#capacity').setCustomValidity('Для такого количества комнат доступно только значение "не для гостей"');
+      document.querySelector('#capacity').setCustomValidity('Для такого количества комнат доступно только значение "не для гостей"');   ////////////////
     }
   } else {
-    document.querySelector('#capacity').setCustomValidity('');
+    document.querySelector('#capacity').setCustomValidity('');   /////////////////
   }
 };
 
-document.querySelector('#room_number').addEventListener('change', roomGuestChangeHandler);
-document.querySelector('#capacity').addEventListener('change', roomGuestChangeHandler);
+document.querySelector('#room_number').addEventListener('change', roomGuestChangeHandler);  /////////////
+document.querySelector('#capacity').addEventListener('change', roomGuestChangeHandler);    ////////////////
 
 //  Функция устанавливает зависимость между полями формы (время заезда и выезда)
 var timesChangeHandler = function (evt) {
@@ -293,8 +289,8 @@ var timesChangeHandler = function (evt) {
   }
 };
 
-document.querySelector('#timein').addEventListener('change', timesChangeHandler);
-document.querySelector('#timeout').addEventListener('change', timesChangeHandler);
+checkinTime.addEventListener('change', timesChangeHandler);
+checkoutTime.addEventListener('change', timesChangeHandler);
 
 //  Функция добавляет значение в атрибут 'min' в поле 'цена'
 var setPrice = function (price) {
@@ -319,4 +315,4 @@ var apartmentPriceChangeHandler = function (evt) {
   }
 };
 
-document.querySelector('#type').addEventListener('change', apartmentPriceChangeHandler);
+document.querySelector('#type').addEventListener('change', apartmentPriceChangeHandler);    ///////////////
