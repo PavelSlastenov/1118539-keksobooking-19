@@ -7,7 +7,6 @@ var CHECKOUT = ['12:00', '13:00', '14:00'];
 var OPTIONS = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator'];
 var X_OFFSET = 33;
 var Y_OFFSET = 65;
-
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 
@@ -202,9 +201,6 @@ for (var i = 0; i < NUMBER_OF_ADS; i++) {
   fragment.appendChild(renderPin(pins[i]));
 }
 
-//  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
-mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
-
 //  Задание 4
 //  Функция включающая и отключющая форму
 var enableForm = function (enable) {
@@ -235,7 +231,13 @@ var enableOrDisablePage = function (enable) {
     adForm.querySelector('#address').setAttribute('value', Math.floor(PIN_WIDTH + X_OFFSET) + ',' +
       Math.floor(PIN_HEIGHT + Y_OFFSET));
     mapElement.classList.remove('map--faded');
+    roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
+    capacity.addEventListener('change', adFormChangeRoomGuestHandler);
+    checkinTime.addEventListener('change', adFormChangetimesHandler);
+    checkoutTime.addEventListener('change', adFormChangetimesHandler);
     type.addEventListener('change', adFormChangeApartmentPriceHandler);
+    //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
+    mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
   }
   mapPinMain.removeEventListener('mousedown', mapPinMainActive);
   mapPinMain.removeEventListener('keydown', mapPinMainCoordinate);
@@ -249,6 +251,8 @@ var mapPinMainActive = function (evt) {
   }
 };
 
+mapPinMain.addEventListener('mousedown', mapPinMainActive);
+
 //  Функция которая активирует страницу при нажатии на клавишу "Enter"
 var mapPinMainCoordinate = function (evt) {
   if (evt.key === 'Enter') {
@@ -256,7 +260,6 @@ var mapPinMainCoordinate = function (evt) {
   }
 };
 
-mapPinMain.addEventListener('mousedown', mapPinMainActive);
 mapPinMain.addEventListener('keydown', mapPinMainCoordinate);
 
 //  Валидация количества комнат и гостей
@@ -280,9 +283,6 @@ var adFormChangeRoomGuestHandler = function () {
   }
 };
 
-roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
-capacity.addEventListener('change', adFormChangeRoomGuestHandler);
-
 //  Функция устанавливает зависимость между полями формы (время заезда и выезда)
 var adFormChangetimesHandler = function (evt) {
   var checkinIndexTime = checkinTime.selectedIndex;
@@ -293,9 +293,6 @@ var adFormChangetimesHandler = function (evt) {
     checkinTime.selectedIndex = checkoutIndexTime;
   }
 };
-
-checkinTime.addEventListener('change', adFormChangetimesHandler);
-checkoutTime.addEventListener('change', adFormChangetimesHandler);
 
 //  Функция добавляет значение в атрибут 'min' в поле 'цена'
 var setPrice = function () {
