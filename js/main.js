@@ -259,7 +259,7 @@ mapPinMain.addEventListener('mousedown', mapPinMainActive);
 mapPinMain.addEventListener('keydown', mapPinMainCoordinate);
 
 //  Валидация количества комнат и гостей
-var roomGuestChangeHandler = function () {
+var adFormChangeRoomGuestHandler = function () {
   var RoomsForm = {
     1: [1],
     2: [1, 2],
@@ -279,11 +279,11 @@ var roomGuestChangeHandler = function () {
   }
 };
 
-roomNumber.addEventListener('change', roomGuestChangeHandler);
-capacity.addEventListener('change', roomGuestChangeHandler);
+roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
+capacity.addEventListener('change', adFormChangeRoomGuestHandler);
 
 //  Функция устанавливает зависимость между полями формы (время заезда и выезда)
-var timesChangeHandler = function (evt) {
+var adFormChangetimesHandler = function (evt) {
   var checkinIndexTime = checkinTime.selectedIndex;
   var checkoutIndexTime = checkoutTime.selectedIndex;
   if (evt.target.matches('#timein')) {
@@ -293,8 +293,8 @@ var timesChangeHandler = function (evt) {
   }
 };
 
-checkinTime.addEventListener('change', timesChangeHandler);
-checkoutTime.addEventListener('change', timesChangeHandler);
+checkinTime.addEventListener('change', adFormChangetimesHandler);
+checkoutTime.addEventListener('change', adFormChangetimesHandler);
 
 //  Функция добавляет значение в атрибут 'min' в поле 'цена'
 var setPrice = function () {
@@ -303,7 +303,7 @@ var setPrice = function () {
 };
 
 //  Функция устанавливает зависимость поля 'цена' от поля 'тип жилья'.
-var apartmentPriceChangeHandler = function () {
+var adFormChangeApartmentPriceHandler = function () {
   var typeIndex = adForm.type.value;
   switch (typeIndex) {
     case 'palace':
@@ -323,4 +323,4 @@ var apartmentPriceChangeHandler = function () {
   }
 };
 
-type.addEventListener('change', apartmentPriceChangeHandler);
+type.addEventListener('change', adFormChangeApartmentPriceHandler);
