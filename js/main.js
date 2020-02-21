@@ -296,6 +296,12 @@ var timesChangeHandler = function (evt) {
 checkinTime.addEventListener('change', timesChangeHandler);
 checkoutTime.addEventListener('change', timesChangeHandler);
 
+//  Функция добавляет значение в атрибут 'min' в поле 'цена'
+var setPrice = function () {
+  apartmenttPrice.setAttribute('min', '0');
+  apartmenttPrice.setAttribute('placeholder', '0');
+};
+
 //  Функция устанавливает зависимость поля 'цена' от поля 'тип жилья'.
 var apartmentPriceChangeHandler = function () {
   var typeIndex = adForm.type.value;
@@ -313,8 +319,7 @@ var apartmentPriceChangeHandler = function () {
       apartmenttPrice.setAttribute('placeholder', '5000');
       break;
     default:
-      apartmenttPrice.setAttribute('min', '0');
-      apartmenttPrice.setAttribute('placeholder', '0');
+      setPrice();
   }
 };
 
