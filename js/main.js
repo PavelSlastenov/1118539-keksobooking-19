@@ -235,6 +235,7 @@ var enableOrDisablePage = function (enable) {
     adForm.querySelector('#address').setAttribute('value', Math.floor(PIN_WIDTH + X_OFFSET) + ',' +
       Math.floor(PIN_HEIGHT + Y_OFFSET));
     mapElement.classList.remove('map--faded');
+    type.addEventListener('change', adFormChangeApartmentPriceHandler);
   }
   mapPinMain.removeEventListener('mousedown', mapPinMainActive);
   mapPinMain.removeEventListener('keydown', mapPinMainCoordinate);
@@ -322,5 +323,3 @@ var adFormChangeApartmentPriceHandler = function () {
       setPrice();
   }
 };
-
-type.addEventListener('change', adFormChangeApartmentPriceHandler);
