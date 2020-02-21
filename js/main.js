@@ -5,21 +5,11 @@ var TYPE_OF_HOUSING = ['palace', 'flat', 'house', 'bungalo'];
 var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
 var OPTIONS = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator'];
+var X_OFFSET = 33;
+var Y_OFFSET = 65;
 
-var Prices = {
-  MIN: 3000,
-  MAX: 15000
-};
-
-var Rooms = {
-  MIN: 1,
-  MAX: 5
-};
-
-var Guests = {
-  MIN: 1,
-  MAX: 10
-};
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
 
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var TITLE = [
@@ -44,9 +34,20 @@ var DESCRIPTION = [
   'Предложение для тех кто хочет сэкономить, раскладушка, обогреватель, холодная вода (горячая у соседей), холодильник за окном'
 ];
 
-//  Размеры метки
-var PIN_WIDTH = 50;
-var PIN_HEIGHT = 70;
+var Prices = {
+  MIN: 3000,
+  MAX: 15000
+};
+
+var Rooms = {
+  MIN: 1,
+  MAX: 5
+};
+
+var Guests = {
+  MIN: 1,
+  MAX: 10
+};
 
 //  Координаты метки
 var CoordinatesX = {
@@ -84,8 +85,6 @@ var adForm = document.querySelector('.ad-form');
 var elementForm = document.querySelectorAll('.ad-form__element');
 var mapPinMain = mapElement.querySelector('.map__pin--main');
 var mapFilters = mapElement.querySelector('.map__filters');
-var X_OFFSET = 33;
-var Y_OFFSET = 65;
 var checkoutTime = document.querySelector('#timeout');
 var checkinTime = document.querySelector('#timein');
 var capacity = document.querySelector('#capacity');
@@ -297,25 +296,25 @@ var timesChangeHandler = function (evt) {
 checkinTime.addEventListener('change', timesChangeHandler);
 checkoutTime.addEventListener('change', timesChangeHandler);
 
-//  Функция добавляет значение в атрибут 'min' в поле 'цена'
-var setPrice = function (price) {
-  apartmenttPrice.setAttribute('min', price);
-  apartmenttPrice.setAttribute('placeholder', price);
-};
-
-//  Функция устанавливает зависимость поля  'цена' от  поля 'тип жилья'.
-var apartmentPriceChangeHandler = function (evt) {
-  var typeIndex = evt.target.selectedIndex;
-  var PricesForm = {
-    0: 0,
-    1: 1000,
-    2: 5000,
-    3: 10000,
-  };
-  for (var j = 0; i < 4; i++) {
-    if (typeIndex === j) {
-      setPrice(PricesForm[j]);
-    }
+//  Функция устанавливает зависимость поля 'цена' от поля 'тип жилья'.
+var apartmentPriceChangeHandler = function () {
+  var typeIndex = adForm.type.value;
+  switch (typeIndex) {
+    case 'palace':
+      apartmenttPrice.setAttribute('min', '10000');
+      apartmenttPrice.setAttribute('placeholder', '10000');
+      break;
+    case 'flat':
+      apartmenttPrice.setAttribute('min', '1000');
+      apartmenttPrice.setAttribute('placeholder', '1000');
+      break;
+    case 'house':
+      apartmenttPrice.setAttribute('min', '5000');
+      apartmenttPrice.setAttribute('placeholder', '5000');
+      break;
+    default:
+      apartmenttPrice.setAttribute('min', '0');
+      apartmenttPrice.setAttribute('placeholder', '0');
   }
 };
 
