@@ -5,10 +5,18 @@ var TYPE_OF_HOUSING = ['palace', 'flat', 'house', 'bungalo'];
 var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
 var OPTIONS = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator'];
-var X_OFFSET = 33;
-var Y_OFFSET = 65;
+//  var X_OFFSET = 33;
+//  var Y_OFFSET = 65;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+
+//  Координаты метк на заблокированной карте
+var INACTIVE_MAIN_PIN_WIDTH = 65;
+var INACTIVE_MAIN_PIN_HEIGHT = 65;
+
+//  Координаты метки на разблкированной карте
+var ACTIVE_MAIN_PIN_WIDTH = 65;
+var ACTIVE_MAIN_PIN_HEIGHT = 84;
 
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var TITLE = [
@@ -219,17 +227,25 @@ var enableForm = function (enable) {
 
 //  Функция автивирует или деактивирует страницу (enable - если true страница активируется, false - деактивируется)
 var enableOrDisablePage = function (enable) {
+  var coordinatesInactive = {
+    left: Math.round(parseInt(mapPinMain.style.left, 10) + INACTIVE_MAIN_PIN_WIDTH / 2),
+    top: Math.round(parseInt(mapPinMain.style.top, 10) + INACTIVE_MAIN_PIN_HEIGHT / 2)
+  };
+
+  var coordinatesActive = {
+    left: Math.round(parseInt(mapPinMain.style.left, 10) + ACTIVE_MAIN_PIN_WIDTH / 2),
+    top: Math.round(parseInt(mapPinMain.style.top, 10) + ACTIVE_MAIN_PIN_HEIGHT)
+  };
+
   if (!enable) {
     enableForm(false);
     mapFilters.classList.add('map__filters--disabled');
-    adForm.querySelector('#address').setAttribute('value', Math.floor((PIN_WIDTH + X_OFFSET) + (PIN_WIDTH / 2)) + ',' +
-      Math.floor((PIN_HEIGHT + Y_OFFSET) + (PIN_HEIGHT / 2)));
+    adForm.querySelector('#address').setAttribute('value', coordinatesInactive.left + ', ' + coordinatesInactive.top);
   } else {
     mapFilters.classList.remove('map__filters--disabled');
     enableForm(true);
     listElement.appendChild(fragment);
-    adForm.querySelector('#address').setAttribute('value', Math.floor(PIN_WIDTH + X_OFFSET) + ',' +
-      Math.floor(PIN_HEIGHT + Y_OFFSET));
+    adForm.querySelector('#address').setAttribute('value', coordinatesActive.left + ', ' + coordinatesActive.top);
     mapElement.classList.remove('map--faded');
     roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
     capacity.addEventListener('change', adFormChangeRoomGuestHandler);
