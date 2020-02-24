@@ -247,6 +247,7 @@ var enableOrDisablePage = function (enable) {
     listElement.appendChild(fragment);
     adForm.querySelector('#address').setAttribute('value', coordinatesActive.left + ', ' + coordinatesActive.top);
     mapElement.classList.remove('map--faded');
+    adFormChangeRoomGuestHandler();
     roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
     capacity.addEventListener('change', adFormChangeRoomGuestHandler);
     checkinTime.addEventListener('change', adFormChangetimesHandler);
