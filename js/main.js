@@ -18,6 +18,10 @@ var INACTIVE_MAIN_PIN_HEIGHT = 65;
 var ACTIVE_MAIN_PIN_WIDTH = 65;
 var ACTIVE_MAIN_PIN_HEIGHT = 84;
 
+//  Длина заголовка
+var MIN_TITLE_LENGTH = 30;
+var MAX_TITLE_LENGTH = 100;
+
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var TITLE = [
   'Отличное расположение!',
@@ -79,6 +83,13 @@ var Address = {
   MAX: 1000
 };
 
+var RoomsCapacity = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+
 //  Метка объявления
 var mapElement = document.querySelector('.map');
 var listElement = document.querySelector('.map__pins');
@@ -98,6 +109,8 @@ var capacity = document.querySelector('#capacity');
 var roomNumber = document.querySelector('#room_number');
 var type = document.querySelector('#type');
 var apartmenttPrice = document.querySelector('#price');
+var filterFormTitle = adForm.querySelector('#title');
+var fieldsets = document.querySelectorAll('fieldset');
 
 //  Функция выбора случайного числа
 var getRandomNumber = function (min, max) {
@@ -247,9 +260,9 @@ var enableOrDisablePage = function (enable) {
     listElement.appendChild(fragment);
     adForm.querySelector('#address').setAttribute('value', coordinatesActive.left + ', ' + coordinatesActive.top);
     mapElement.classList.remove('map--faded');
-    adFormChangeRoomGuestHandler();
-    roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
-    capacity.addEventListener('change', adFormChangeRoomGuestHandler);
+    // adFormChangeRoomGuestHandler();
+    //  roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
+    //  capacity.addEventListener('change', adFormChangeRoomGuestHandler);
     checkinTime.addEventListener('change', adFormChangetimesHandler);
     checkoutTime.addEventListener('change', adFormChangetimesHandler);
     type.addEventListener('change', adFormChangeApartmentPriceHandler);
@@ -279,6 +292,7 @@ var mapPinMainCoordinate = function (evt) {
 
 mapPinMain.addEventListener('keydown', mapPinMainCoordinate);
 
+/*
 //  Валидация количества комнат и гостей
 var adFormChangeRoomGuestHandler = function () {
   var RoomsForm = {
@@ -299,6 +313,7 @@ var adFormChangeRoomGuestHandler = function () {
     capacity.setCustomValidity('');
   }
 };
+*/
 
 //  Функция устанавливает зависимость между полями формы (время заезда и выезда)
 var adFormChangetimesHandler = function (evt) {
@@ -337,3 +352,64 @@ var adFormChangeApartmentPriceHandler = function () {
       setPrice();
   }
 };
+
+//  Удаляет возможность выбора в поле количество мест, те варианты которые не соответствуют количеству комнат
+var changeCapacityRange = function () {
+  if (capacity.options.length) {
+    [].forEach.call(capacity.options, function (item) {
+      item.selected = (RoomsCapacity[roomNumber.value][0] === item.value) ? true : false;
+      item.disabled = (RoomsCapacity[roomNumber.value].indexOf(item.value) >= 0) ? false : true;
+    });
+  }
+};
+changeCapacityRange();
+
+//  Устнавливает сообщение об ошибке
+var setCapacityValidation = function () {
+  if (capacity.options.length) {
+    if (RoomsCapacity[roomNumber.value].indexOf(capacity.value) < 0) {
+      roomNumber.setCustomValidity('К сожалению этот вариант вам не подойдёт, пожалуйста выберите другое количество комнат');
+    } else {
+      roomNumber.setCustomValidity('');
+    }
+  }
+};
+
+//  Обработчик события при изменении количества комнат
+var onChangeFormRooms = function () {
+  changeCapacityRange();
+  setCapacityValidation();
+};
+
+//  Обработчик события при изменении поля "Заголовок объявления"
+var onInputFormTitle = function (evt) {
+  if (evt.target.value.length < MIN_TITLE_LENGTH) {
+    evt.target.setCustomValidity('Заголовок должен состоять минимум из ' + MIN_TITLE_LENGTH + ' символов.');
+  } else if (evt.target.value.length > MAX_TITLE_LENGTH) {
+    evt.target.setCustomValidity('Заголовок должен состоять максимум из ' + MAX_TITLE_LENGTH + ' символов.');
+  } else {
+    evt.target.setCustomValidity('');
+  }
+};
+
+//  Отключаем/включаем редактирование полей для ввода данных
+var toggleActivateInputs = function () {
+  fieldsets.forEach(function (item) {
+    item.toggleAttribute('disabled');
+  });
+
+  addFormInputsListener();
+};
+
+//  Вешаем обработчик события при изменении кол-ва комнат
+var addFormInputsListener = function () {
+  roomNumber.addEventListener('change', onChangeFormRooms);
+  filterFormTitle.addEventListener('input', onInputFormTitle);
+};
+
+//  Удаляем обработчик после изменения количества комнат
+roomNumber.removeEventListener('change', onChangeFormRooms);
+filterFormTitle.removeEventListener('input', onInputFormTitle);
+
+setCapacityValidation();
+toggleActivateInputs();
