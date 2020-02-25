@@ -292,7 +292,7 @@ var mapPinMainCoordinate = function (evt) {
 
 mapPinMain.addEventListener('keydown', mapPinMainCoordinate);
 
-
+/*
 //  Валидация количества комнат и гостей
 var adFormChangeRoomGuestHandler = function () {
   var RoomsForm = {
@@ -313,7 +313,7 @@ var adFormChangeRoomGuestHandler = function () {
     capacity.setCustomValidity('');
   }
 };
-
+*/
 
 //  Функция устанавливает зависимость между полями формы (время заезда и выезда)
 var adFormChangetimesHandler = function (evt) {
