@@ -263,11 +263,11 @@ var enableOrDisablePage = function (enable) {
     // adFormChangeRoomGuestHandler();
     //  roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
     //  capacity.addEventListener('change', adFormChangeRoomGuestHandler);
+    //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
+    //  mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
     checkinTime.addEventListener('change', adFormChangetimesHandler);
     checkoutTime.addEventListener('change', adFormChangetimesHandler);
     type.addEventListener('change', adFormChangeApartmentPriceHandler);
-    //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
-    mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
   }
   mapPinMain.removeEventListener('mousedown', mapPinMainActive);
   mapPinMain.removeEventListener('keydown', mapPinMainCoordinate);
@@ -401,7 +401,7 @@ var toggleActivateInputs = function () {
   addFormInputsListener();
 };
 
-//  Вешаем обработчик события при изменении кол-ва комнат
+//  Обработчик события при изменении кол-ва комнат
 var addFormInputsListener = function () {
   roomNumber.addEventListener('change', onChangeFormRooms);
   filterFormTitle.addEventListener('input', onInputFormTitle);
@@ -411,5 +411,45 @@ var addFormInputsListener = function () {
 roomNumber.removeEventListener('change', onChangeFormRooms);
 filterFormTitle.removeEventListener('input', onInputFormTitle);
 
+// Функция, которая удаляет все вставленные фрагметом метки объявлений
+var removeCard = function () {
+  var cardPopup = mapElement.querySelector('.popup');
+  cardPopup.querySelector('.popup__close').removeEventListener('click', removeCard);
+  cardPopup.remove();
+};
+
+// Функция вставки нового элемента в DOM
+var addOfferCard = function (offer) {
+  if (mapElement.querySelector('.popup')) { // Проверяем была ли до этого вызвана карточка, если она вызвана, нужно ее убрать
+    removeCard();
+  }
+  var card = renderCard(offer); // Вызываем функцию отрисовки карточки
+  mapElement.insertBefore(card, mapFiltersContainer); // Вставка card в карту
+  var cardPopup = mapElement.querySelector('.popup'); // После того как вставили находим этот карточку
+  cardPopup.querySelector('.popup__close').addEventListener('click', removeCard); // при вставке элемента навешиваем обоаботчики его удаления
+};
+
+// Функция добавляет на все новые метки обработчик события "клик"
+var addAllPinsClickListener = function () {
+  var newMapPins = listElement.querySelectorAll('.map__pin'); // Найдем массив новых меток
+
+  // Функция замыкания, чтобы создать отдельное событие для каждой метки в отдельности
+  var addPinClickListener = function (pin, j) {
+    var onPinClick = function () {
+      var numberOffer = j - 1; // на 1 меньше потому, что массив newMapPins начинается с mainPin
+      addOfferCard(getList[numberOffer]);
+    };
+    // Добавление обработчиков
+    pin.addEventListener('click', onPinClick);
+  };
+
+  // Цикл для установки обработчки на каждый пин кроме первого, потому что перый - главная метка
+  for (var j = 1; j < newMapPins.length; j++) {
+    var pin = newMapPins[j];
+    addPinClickListener(pin, j);
+  }
+};
+
 setCapacityValidation();
 toggleActivateInputs();
+addAllPinsClickListener();
