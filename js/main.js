@@ -265,10 +265,11 @@ var enableOrDisablePage = function (enable) {
     //  capacity.addEventListener('change', adFormChangeRoomGuestHandler);
     //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
     //  mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
-    checkinTime.addEventListener('change', adFormChangetimesHandler);
-    checkoutTime.addEventListener('change', adFormChangetimesHandler);
+    checkinTime.addEventListener('change', adFormChangeTimesHandler);
+    checkoutTime.addEventListener('change', adFormChangeTimesHandler);
     type.addEventListener('change', adFormChangeApartmentPriceHandler);
   }
+
   mapPinMain.removeEventListener('mousedown', mapPinMainActive);
   mapPinMain.removeEventListener('keydown', mapPinMainCoordinate);
 };
@@ -316,7 +317,7 @@ var adFormChangeRoomGuestHandler = function () {
 */
 
 //  Функция устанавливает зависимость между полями формы (время заезда и выезда)
-var adFormChangetimesHandler = function (evt) {
+var adFormChangeTimesHandler = function (evt) {
   var checkinIndexTime = checkinTime.selectedIndex;
   var checkoutIndexTime = checkoutTime.selectedIndex;
   if (evt.target.matches('#timein')) {
