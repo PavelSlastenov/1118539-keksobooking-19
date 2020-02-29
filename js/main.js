@@ -18,9 +18,11 @@ var INACTIVE_MAIN_PIN_HEIGHT = 65;
 var ACTIVE_MAIN_PIN_WIDTH = 65;
 var ACTIVE_MAIN_PIN_HEIGHT = 84;
 
+/*
 //  Длина заголовка
 var MIN_TITLE_LENGTH = 30;
 var MAX_TITLE_LENGTH = 100;
+*/
 
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var TITLE = [
@@ -83,12 +85,14 @@ var Address = {
   MAX: 1000
 };
 
+/*
 var RoomsCapacity = {
   '1': ['1'],
   '2': ['1', '2'],
   '3': ['1', '2', '3'],
   '100': ['0']
 };
+*/
 
 //  Метка объявления
 var mapElement = document.querySelector('.map');
@@ -109,8 +113,8 @@ var capacity = document.querySelector('#capacity');
 var roomNumber = document.querySelector('#room_number');
 var type = document.querySelector('#type');
 var apartmenttPrice = document.querySelector('#price');
-var filterFormTitle = adForm.querySelector('#title');
-var fieldsets = document.querySelectorAll('fieldset');
+//  var filterFormTitle = adForm.querySelector('#title');
+//  var fieldsets = document.querySelectorAll('fieldset');
 
 //  Функция выбора случайного числа
 var getRandomNumber = function (min, max) {
@@ -260,9 +264,10 @@ var enableOrDisablePage = function (enable) {
     listElement.appendChild(fragment);
     adForm.querySelector('#address').setAttribute('value', coordinatesActive.left + ', ' + coordinatesActive.top);
     mapElement.classList.remove('map--faded');
-    // adFormChangeRoomGuestHandler();
-    //  roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
-    //  capacity.addEventListener('change', adFormChangeRoomGuestHandler);
+    adFormChangeApartmentPrice();
+    adFormChangeRoomGuestHandler();
+    roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
+    capacity.addEventListener('change', adFormChangeRoomGuestHandler);
     //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
     //  mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
     checkinTime.addEventListener('change', adFormChangeTimesHandler);
@@ -293,7 +298,6 @@ var mapPinMainCoordinate = function (evt) {
 
 mapPinMain.addEventListener('keydown', mapPinMainCoordinate);
 
-/*
 //  Валидация количества комнат и гостей
 var adFormChangeRoomGuestHandler = function () {
   var RoomsForm = {
@@ -314,7 +318,6 @@ var adFormChangeRoomGuestHandler = function () {
     capacity.setCustomValidity('');
   }
 };
-*/
 
 //  Функция устанавливает зависимость между полями формы (время заезда и выезда)
 var adFormChangeTimesHandler = function (evt) {
@@ -328,32 +331,33 @@ var adFormChangeTimesHandler = function (evt) {
 };
 
 //  Функция добавляет значение в атрибут 'min' в поле 'цена'
-var setPrice = function () {
+var adFormChangeApartmentPrice = function () {
   apartmenttPrice.setAttribute('min', '0');
   apartmenttPrice.setAttribute('placeholder', '0');
+
+  //  Функция устанавливает зависимость поля 'цена' от поля 'тип жилья'.
+  var adFormChangeApartmentPriceHandler = function () {
+    var typeIndex = adForm.type.value;
+    switch (typeIndex) {
+      case 'palace':
+        apartmenttPrice.setAttribute('min', '10000');
+        apartmenttPrice.setAttribute('placeholder', '10000');
+        break;
+      case 'flat':
+        apartmenttPrice.setAttribute('min', '1000');
+        apartmenttPrice.setAttribute('placeholder', '1000');
+        break;
+      case 'house':
+        apartmenttPrice.setAttribute('min', '5000');
+        apartmenttPrice.setAttribute('placeholder', '5000');
+        break;
+      default:
+        adFormChangeApartmentPrice();
+    }
+  };
 };
 
-//  Функция устанавливает зависимость поля 'цена' от поля 'тип жилья'.
-var adFormChangeApartmentPriceHandler = function () {
-  var typeIndex = adForm.type.value;
-  switch (typeIndex) {
-    case 'palace':
-      apartmenttPrice.setAttribute('min', '10000');
-      apartmenttPrice.setAttribute('placeholder', '10000');
-      break;
-    case 'flat':
-      apartmenttPrice.setAttribute('min', '1000');
-      apartmenttPrice.setAttribute('placeholder', '1000');
-      break;
-    case 'house':
-      apartmenttPrice.setAttribute('min', '5000');
-      apartmenttPrice.setAttribute('placeholder', '5000');
-      break;
-    default:
-      setPrice();
-  }
-};
-
+/*
 //  Удаляет возможность выбора в поле количество мест, те варианты которые не соответствуют количеству комнат
 var changeCapacityRange = function () {
   if (capacity.options.length) {
@@ -364,7 +368,9 @@ var changeCapacityRange = function () {
   }
 };
 changeCapacityRange();
+*/
 
+/*
 //  Устнавливает сообщение об ошибке
 var setCapacityValidation = function () {
   if (capacity.options.length) {
@@ -382,6 +388,7 @@ var onChangeFormRooms = function () {
   setCapacityValidation();
 };
 
+
 //  Обработчик события при изменении поля "Заголовок объявления"
 var onInputFormTitle = function (evt) {
   if (evt.target.value.length < MIN_TITLE_LENGTH) {
@@ -392,7 +399,9 @@ var onInputFormTitle = function (evt) {
     evt.target.setCustomValidity('');
   }
 };
+*/
 
+/*
 //  Отключаем/включаем редактирование полей для ввода данных
 var toggleActivateInputs = function () {
   fieldsets.forEach(function (item) {
@@ -411,6 +420,7 @@ var addFormInputsListener = function () {
 //  Удаляем обработчик после изменения количества комнат
 roomNumber.removeEventListener('change', onChangeFormRooms);
 filterFormTitle.removeEventListener('input', onInputFormTitle);
+*/
 
 // Функция, которая удаляет все вставленные фрагметом метки объявлений
 var removeCard = function () {
@@ -426,7 +436,7 @@ var addOfferCard = function (offer) {
   }
   var card = renderCard(offer); // Вызываем функцию отрисовки карточки
   mapElement.insertBefore(card, mapFiltersContainer); // Вставка card в карту
-  var cardPopup = mapElement.querySelector('.popup'); // После того как вставили находим этот карточку
+  var cardPopup = mapElement.querySelector('.popup'); // После того как вставили находим эту карточку
   cardPopup.querySelector('.popup__close').addEventListener('click', removeCard); // при вставке элемента навешиваем обоаботчики его удаления
 };
 
@@ -451,6 +461,5 @@ var addAllPinsClickListener = function () {
   }
 };
 
-setCapacityValidation();
-toggleActivateInputs();
+//  setCapacityValidation();
 addAllPinsClickListener();
