@@ -253,7 +253,7 @@ var enableOrDisablePage = function (enable) {
     capacity.addEventListener('change', adFormChangeRoomGuestHandler);
     checkinTime.addEventListener('change', adFormChangetimesHandler);
     checkoutTime.addEventListener('change', adFormChangetimesHandler);
-    type.addEventListener('change', adFormChangeApartmentPriceHandler);
+    type.addEventListener('change', adFormChangeApartmentPrice);
     //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
     mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
   }
@@ -313,7 +313,7 @@ var adFormChangetimesHandler = function (evt) {
 };
 
 //  Функция добавляет значение в атрибут 'min' в поле 'цена'
-var adFormChangeApartmentPrice = function () {
+var setPrice = function () {
   apartmenttPrice.setAttribute('min', '0');
   apartmenttPrice.setAttribute('placeholder', '0');
 };
@@ -335,8 +335,12 @@ var adFormChangeApartmentPriceHandler = function () {
       apartmenttPrice.setAttribute('placeholder', '5000');
       break;
     default:
-      adFormChangeApartmentPrice();
+      setPrice();
   }
+};
+
+var adFormChangeApartmentPrice = function () {
+  adFormChangeApartmentPriceHandler();
 };
 
 /*
