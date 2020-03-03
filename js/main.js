@@ -18,12 +18,6 @@ var INACTIVE_MAIN_PIN_HEIGHT = 65;
 var ACTIVE_MAIN_PIN_WIDTH = 65;
 var ACTIVE_MAIN_PIN_HEIGHT = 84;
 
-/*
-//  Длина заголовка
-var MIN_TITLE_LENGTH = 30;
-var MAX_TITLE_LENGTH = 100;
-*/
-
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var TITLE = [
   'Отличное расположение!',
@@ -85,15 +79,6 @@ var Address = {
   MAX: 1000
 };
 
-/*
-var RoomsCapacity = {
-  '1': ['1'],
-  '2': ['1', '2'],
-  '3': ['1', '2', '3'],
-  '100': ['0']
-};
-*/
-
 //  Метка объявления
 var mapElement = document.querySelector('.map');
 var listElement = document.querySelector('.map__pins');
@@ -113,8 +98,6 @@ var capacity = document.querySelector('#capacity');
 var roomNumber = document.querySelector('#room_number');
 var type = document.querySelector('#type');
 var apartmenttPrice = document.querySelector('#price');
-//  var filterFormTitle = adForm.querySelector('#title');
-//  var fieldsets = document.querySelectorAll('fieldset');
 
 //  Функция выбора случайного числа
 var getRandomNumber = function (min, max) {
@@ -264,17 +247,16 @@ var enableOrDisablePage = function (enable) {
     listElement.appendChild(fragment);
     adForm.querySelector('#address').setAttribute('value', coordinatesActive.left + ', ' + coordinatesActive.top);
     mapElement.classList.remove('map--faded');
-    adFormChangeApartmentPrice();
     adFormChangeRoomGuestHandler();
+    adFormChangeApartmentPriceHandler();
     roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
     capacity.addEventListener('change', adFormChangeRoomGuestHandler);
-    //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
-    //  mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
-    checkinTime.addEventListener('change', adFormChangeTimesHandler);
-    checkoutTime.addEventListener('change', adFormChangeTimesHandler);
+    checkinTime.addEventListener('change', adFormChangetimesHandler);
+    checkoutTime.addEventListener('change', adFormChangetimesHandler);
     type.addEventListener('change', adFormChangeApartmentPriceHandler);
+    //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
+    mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
   }
-
   mapPinMain.removeEventListener('mousedown', mapPinMainActive);
   mapPinMain.removeEventListener('keydown', mapPinMainCoordinate);
 };
@@ -320,7 +302,7 @@ var adFormChangeRoomGuestHandler = function () {
 };
 
 //  Функция устанавливает зависимость между полями формы (время заезда и выезда)
-var adFormChangeTimesHandler = function (evt) {
+var adFormChangetimesHandler = function (evt) {
   var checkinIndexTime = checkinTime.selectedIndex;
   var checkoutIndexTime = checkoutTime.selectedIndex;
   if (evt.target.matches('#timein')) {
@@ -334,27 +316,27 @@ var adFormChangeTimesHandler = function (evt) {
 var adFormChangeApartmentPrice = function () {
   apartmenttPrice.setAttribute('min', '0');
   apartmenttPrice.setAttribute('placeholder', '0');
+};
 
-  //  Функция устанавливает зависимость поля 'цена' от поля 'тип жилья'.
-  var adFormChangeApartmentPriceHandler = function () {
-    var typeIndex = adForm.type.value;
-    switch (typeIndex) {
-      case 'palace':
-        apartmenttPrice.setAttribute('min', '10000');
-        apartmenttPrice.setAttribute('placeholder', '10000');
-        break;
-      case 'flat':
-        apartmenttPrice.setAttribute('min', '1000');
-        apartmenttPrice.setAttribute('placeholder', '1000');
-        break;
-      case 'house':
-        apartmenttPrice.setAttribute('min', '5000');
-        apartmenttPrice.setAttribute('placeholder', '5000');
-        break;
-      default:
-        adFormChangeApartmentPrice();
-    }
-  };
+//  Функция устанавливает зависимость поля 'цена' от поля 'тип жилья'.
+var adFormChangeApartmentPriceHandler = function () {
+  var typeIndex = adForm.type.value;
+  switch (typeIndex) {
+    case 'palace':
+      apartmenttPrice.setAttribute('min', '10000');
+      apartmenttPrice.setAttribute('placeholder', '10000');
+      break;
+    case 'flat':
+      apartmenttPrice.setAttribute('min', '1000');
+      apartmenttPrice.setAttribute('placeholder', '1000');
+      break;
+    case 'house':
+      apartmenttPrice.setAttribute('min', '5000');
+      apartmenttPrice.setAttribute('placeholder', '5000');
+      break;
+    default:
+      adFormChangeApartmentPrice();
+  }
 };
 
 /*
@@ -462,4 +444,5 @@ var addAllPinsClickListener = function () {
 };
 
 //  setCapacityValidation();
+//  toggleActivateInputs();
 addAllPinsClickListener();
