@@ -247,13 +247,13 @@ var enableOrDisablePage = function (enable) {
     listElement.appendChild(fragment);
     adForm.querySelector('#address').setAttribute('value', coordinatesActive.left + ', ' + coordinatesActive.top);
     mapElement.classList.remove('map--faded');
+    adFormChangeApartmentPrice();
     adFormChangeRoomGuestHandler();
-    adFormChangeApartmentPriceHandler();
     roomNumber.addEventListener('change', adFormChangeRoomGuestHandler);
     capacity.addEventListener('change', adFormChangeRoomGuestHandler);
     checkinTime.addEventListener('change', adFormChangetimesHandler);
     checkoutTime.addEventListener('change', adFormChangetimesHandler);
-    type.addEventListener('change', adFormChangeApartmentPrice);
+    type.addEventListener('change', adFormChangeApartmentPriceHandler);
     //  Вставляет полученный DOM-элемент в блок .map перед блоком.map__filters-container
     mapElement.insertBefore(fragment.appendChild(renderCard(pins[0])), mapFiltersContainer);
   }
@@ -319,7 +319,7 @@ var setPrice = function () {
 };
 
 //  Функция устанавливает зависимость поля 'цена' от поля 'тип жилья'.
-var adFormChangeApartmentPriceHandler = function () {
+var adFormChangeApartmentPrice = function () {
   var typeIndex = adForm.type.value;
   switch (typeIndex) {
     case 'palace':
@@ -339,8 +339,8 @@ var adFormChangeApartmentPriceHandler = function () {
   }
 };
 
-var adFormChangeApartmentPrice = function () {
-  adFormChangeApartmentPriceHandler();
+var adFormChangeApartmentPriceHandler = function () {
+  adFormChangeApartmentPrice();
 };
 
 /*
